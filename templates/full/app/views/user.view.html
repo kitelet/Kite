@@ -1,0 +1,28 @@
+<kite-view name="user">
+  <div class="card" kite-scope="user">
+    <h2>Profile</h2>
+    <div kite-if="!editing">
+      <kite-use name="user-card" kite-bind:profile="profile"></kite-use>
+      <p kite-text="profile.bio">Bio</p>
+      <button class="btn" kite-on-click="startEdit()">Edit Profile</button>
+    </div>
+    <div kite-if="editing">
+      <div class="form-group">
+        <label>Name</label>
+        <input class="input" type="text" kite-model="profile.name">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input class="input" type="email" kite-model="profile.email">
+      </div>
+      <div class="form-group">
+        <label>Bio</label>
+        <textarea class="input" kite-model="profile.bio"></textarea>
+      </div>
+      <div class="actions">
+        <button class="btn" kite-on-click="save()">Save</button>
+        <button class="btn btn-secondary" kite-on-click="cancelEdit()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</kite-view>

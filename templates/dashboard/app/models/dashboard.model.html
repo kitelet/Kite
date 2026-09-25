@@ -1,0 +1,17 @@
+<!-- app/models/dashboard.model.html -->
+<kite-model name="dashboard">
+  {
+    revenue: "$48,290",
+    activeUsers: "1,420",
+    conversionRate: "4.8%",
+    recentOrders: [
+      { id: "ORD-921", customer: "Sophia Taylor", amount: "$320.00", status: "Completed" },
+      { id: "ORD-922", customer: "Liam Johnson", amount: "$145.50", status: "Pending" },
+      { id: "ORD-923", customer: "Noah Davis", amount: "$520.00", status: "Completed" }
+    ],
+    refresh() {
+      const randomRev = Math.floor(45000 + Math.random() * 8000);
+      this.revenue = "$" + randomRev.toLocaleString();
+    }
+  }
+</kite-model>

@@ -1,0 +1,48 @@
+<kite-view name="showcase">
+  <div class="showcase" kite-scope="{ modalOpen: false }">
+    <h1>🪁 Kite Component Kit</h1>
+    <p>A design system starter. Drop components anywhere in your app.</p>
+
+    <section class="section">
+      <h2>Buttons</h2>
+      <div class="row">
+        <kite-use name="k-button" label="Primary"></kite-use>
+        <kite-use name="k-button" label="Secondary" variant="secondary"></kite-use>
+        <kite-use name="k-button" label="Danger" variant="danger"></kite-use>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Cards</h2>
+      <kite-use name="k-card" title="Example Card">
+        <p>Card body content goes here. Cards surface any HTML inside their slot.</p>
+      </kite-use>
+    </section>
+
+    <section class="section">
+      <h2>Alerts</h2>
+      <kite-use name="k-alert" type="info" message="This is an informational alert."></kite-use>
+      <kite-use name="k-alert" type="success" message="Operation completed successfully."></kite-use>
+      <kite-use name="k-alert" type="warning" message="Please review before continuing."></kite-use>
+      <kite-use name="k-alert" type="error" message="Something went wrong. Try again."></kite-use>
+    </section>
+
+    <section class="section">
+      <h2>Inputs</h2>
+      <kite-use name="k-input" label="Full Name" placeholder="Enter your name" name="name"></kite-use>
+      <kite-use name="k-input" label="Email" type="email" placeholder="you@example.com" name="email"></kite-use>
+    </section>
+
+    <section class="section">
+      <h2>Modal</h2>
+      <kite-use name="k-button" label="Open Modal" kite-on-click="modalOpen = true"></kite-use>
+      <kite-use name="k-modal" kite-bind:open="modalOpen" title="Confirm Action" kite-on-close="modalOpen = false">
+        <p>Are you sure you want to proceed?</p>
+        <div class="row">
+          <kite-use name="k-button" label="Confirm" kite-on-click="modalOpen = false"></kite-use>
+          <kite-use name="k-button" label="Cancel" variant="secondary" kite-on-click="modalOpen = false"></kite-use>
+        </div>
+      </kite-use>
+    </section>
+  </div>
+</kite-view>

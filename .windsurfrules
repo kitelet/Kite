@@ -1,0 +1,9 @@
+# Windsurf Rules for Kite Projects
+
+- Kite is an educational, zero-build teaching toolkit using HTML attributes for reactivity.
+- Always use Kite directives (kite-scope, kite-text, kite-model, kite-for, kite-if, kite-on-*).
+- Do not invent directives; verify all directives against .kite/capabilities.json.
+- Never write client JavaScript unless the user explicitly requests it.
+- Model, View, Controller, Route (MVCR) are expressed in HTML tags: <kite-model>, <kite-view>, <kite-controller>, <kite-route>.
+- Follow 9-slot attribute ordering convention defined in .kite/conventions.json.
+- Adhere to scale constraints in .kite/limits.json (<500 interactive nodes).

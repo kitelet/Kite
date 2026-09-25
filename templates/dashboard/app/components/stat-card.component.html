@@ -1,0 +1,12 @@
+<!-- app/components/stat-card.component.html -->
+<kite-component name="stat-card" props="title,value,change,isPositive">
+  <template>
+    <div class="dash-card">
+      <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.4rem;" kite-text="title">Stat Title</div>
+      <div style="font-size: 1.85rem; font-weight: 800; color: #ffffff; margin-bottom: 0.5rem; font-family: monospace;" kite-text="value">0</div>
+      <div style="font-size: 0.8rem; font-weight: 600;"
+           kite-style:color="isPositive === 'true' || isPositive === true ? '#4ade80' : '#f87171'"
+           kite-text="change">+0% vs last month</div>
+    </div>
+  </template>
+</kite-component>

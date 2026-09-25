@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kite Component Kit</title>
+  <link rel="stylesheet" href="/styles/tokens.css">
+  <link rel="stylesheet" href="/styles/components.css">
+  <script src="/kite.js" defer></script>
+</head>
+<body>
+
+  <kite-config mode="dev" routing="hash"></kite-config>
+
+  <!-- Components -->
+  <kite-include src="/app/components/button.component.html"></kite-include>
+  <kite-include src="/app/components/card.component.html"></kite-include>
+  <kite-include src="/app/components/modal.component.html"></kite-include>
+  <kite-include src="/app/components/input.component.html"></kite-include>
+  <kite-include src="/app/components/alert.component.html"></kite-include>
+
+  <!-- Views -->
+  <kite-include src="/app/views/showcase.view.html"></kite-include>
+
+  <!-- Routes -->
+  <kite-include src="/app/routes/routes.html"></kite-include>
+
+  <main class="page-container">
+    <kite-outlet></kite-outlet>
+  </main>
+
+</body>
+</html>

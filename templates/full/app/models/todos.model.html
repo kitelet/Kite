@@ -1,0 +1,25 @@
+<kite-model name="todos">
+  {
+    items: [
+      { id: 1, text: "Learn Kite MVCR", done: true },
+      { id: 2, text: "Build an HTML-first app", done: false }
+    ],
+    newTodo: "",
+    add() {
+      if (!this.newTodo.trim()) return;
+      this.items.push({
+        id: Date.now(),
+        text: this.newTodo.trim(),
+        done: false
+      });
+      this.newTodo = "";
+    },
+    toggle(id) {
+      const item = this.items.find(t => t.id === id);
+      if (item) item.done = !item.done;
+    },
+    remove(id) {
+      this.items = this.items.filter(t => t.id !== id);
+    }
+  }
+</kite-model>

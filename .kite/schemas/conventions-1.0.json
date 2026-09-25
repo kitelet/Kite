@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://getkite.netlify.app/schemas/conventions-1.0.json",
+  "title": "Kite Conventions Schema",
+  "type": "object",
+  "required": ["$schema", "markupOrder", "markupOrderMap", "naming", "filePatterns"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "markupOrder": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "markupOrderMap": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": { "type": "string" }
+      }
+    },
+    "naming": {
+      "type": "object",
+      "properties": {
+        "files": { "type": "string" },
+        "functions": { "type": "string" },
+        "constants": { "type": "string" },
+        "attributes": { "type": "string" },
+        "models": { "type": "string" },
+        "views": { "type": "string" },
+        "components": { "type": "string" }
+      }
+    },
+    "filePatterns": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    }
+  }
+}

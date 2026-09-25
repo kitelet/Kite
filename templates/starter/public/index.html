@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A Kite starter app">
+  <title>Kite Starter App</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/kite.css">
+  <link rel="stylesheet" href="/styles/app.css">
+
+  <!-- Kite runtime -->
+  <script src="/kite.js" defer></script>
+</head>
+<body>
+
+  <!-- App Configuration -->
+  <kite-config mode="dev" routing="hash"></kite-config>
+
+  <!-- Navigation Bar Component -->
+  <kite-include src="/app/components/nav-bar.component.html"></kite-include>
+  <kite-use name="nav-bar"></kite-use>
+
+  <!-- Models -->
+  <kite-include src="/app/models/counter.model.html"></kite-include>
+
+  <!-- Views -->
+  <kite-include src="/app/views/home.view.html"></kite-include>
+  <kite-include src="/app/views/about.view.html"></kite-include>
+
+  <!-- Routes -->
+  <kite-include src="/app/routes/routes.html"></kite-include>
+
+  <!-- Outlet where active view renders -->
+  <main class="container">
+    <kite-outlet></kite-outlet>
+  </main>
+
+</body>
+</html>

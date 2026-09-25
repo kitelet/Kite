@@ -1,0 +1,74 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://getkite.netlify.app/schemas/capabilities-1.0.json",
+  "title": "Kite Capabilities Schema",
+  "type": "object",
+  "required": ["$schema", "directives", "tags", "apis", "helpers"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "directives": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["syntax", "purpose", "example", "since"],
+        "properties": {
+          "syntax": { "type": "string" },
+          "purpose": { "type": "string" },
+          "example": { "type": "string" },
+          "modifiers": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "related": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "since": { "type": "string" }
+        }
+      }
+    },
+    "tags": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["purpose", "example", "since"],
+        "properties": {
+          "purpose": { "type": "string" },
+          "attributes": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "example": { "type": "string" },
+          "since": { "type": "string" }
+        }
+      }
+    },
+    "apis": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["signature", "since"],
+        "properties": {
+          "signature": { "type": "string" },
+          "purpose": { "type": "string" },
+          "example": { "type": "string" },
+          "returns": { "type": "string" },
+          "since": { "type": "string" }
+        }
+      }
+    },
+    "helpers": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["signature", "since"],
+        "properties": {
+          "signature": { "type": "string" },
+          "purpose": { "type": "string" },
+          "example": { "type": "string" },
+          "since": { "type": "string" }
+        }
+      }
+    }
+  }
+}

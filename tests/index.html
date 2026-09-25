@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Kite Toolkit — Test Suite</title>
+    <link rel="stylesheet" href="../src/styles/kite.css" />
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        margin: 40px auto;
+        max-width: 800px;
+        line-height: 1.6;
+        color: #1e293b;
+        background: #f8fafc;
+      }
+      h1 {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #0f172a;
+      }
+      .badge {
+        font-size: 13px;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 9999px;
+        background: #e2e8f0;
+        color: #475569;
+      }
+      .badge-success {
+        background: #dcfce7;
+        color: #166534;
+      }
+      .badge-fail {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+      .test-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 16px 20px;
+        margin-bottom: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      }
+      .test-name {
+        font-weight: 600;
+        font-size: 15px;
+        margin-bottom: 6px;
+        display: flex;
+        justify-content: space-between;
+      }
+      .test-log {
+        font-family: monospace;
+        font-size: 13px;
+        color: #64748b;
+      }
+      #sandbox {
+        display: none;
+      }
+      .active-class {
+        color: #2563eb;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>
+      <span>🪁 Kite Browser Test Suite</span>
+      <span id="overall-badge" class="badge">Running...</span>
+    </h1>
+    <p>
+      Verifying directives, components, slots, models, controllers, and
+      declarative routing.
+    </p>
+
+    <!-- Visual Test Results Container -->
+    <div id="results"></div>
+
+    <!-- Hidden Sandbox For DOM Interactivity Testing -->
+    <div id="sandbox">
+      <!-- Test 1: kite-text and kite-on-click -->
+      <div id="t1-scope" kite-scope="{ count: 0 }">
+        <button id="t1-btn" kite-on-click="count++">+</button>
+        <span id="t1-text" kite-text="count"></span>
+      </div>
+
+      <!-- Test 2: kite-bind -->
+      <div
+        id="t2-scope"
+        kite-scope="{ disabled: false, tooltip: 'Hello Kite' }"
+      >
+        <button
+          id="t2-btn"
+          kite-bind:disabled="disabled"
+          kite-bind:title="tooltip"
+        >
+          Action
+        </button>
+      </div>
+
+      <!-- Test 3: kite-model (two-way) -->
+      <div id="t3-scope" kite-scope="{ username: 'Ada', agreed: true }">
+        <input id="t3-input" type="text" kite-model="username" />
+        <input id="t3-check" type="checkbox" kite-model="agreed" />
+        <span id="t3-display" kite-text="username"></span>
+      </div>
+
+      <!-- Test 4: kite-if and kite-else -->
+      <div id="t4-scope" kite-scope="{ show: true }">
+        <p id="t4-if" kite-if="show">Visible Branch</p>
+        <p id="t4-else" kite-else>Fallback Branch</p>
+      </div>
+
+      <!-- Test 5: kite-show -->
+      <div id="t5-scope" kite-scope="{ isVisible: false }">
+        <div id="t5-el" kite-show="isVisible">Hidden Content</div>
+      </div>
+
+      <!-- Test 6: kite-class -->
+      <div id="t6-scope" kite-scope="{ active: false }">
+        <div id="t6-el" kite-class:active-class="active">Styled Text</div>
+      </div>
+
+      <!-- Test 7: kite-for -->
+      <div id="t7-scope" kite-scope="{ items: ['First', 'Second'] }">
+        <ul id="t7-list">
+          <li class="t7-item" kite-for="item in items" kite-text="item"></li>
+        </ul>
+      </div>
+
+      <!-- Test 8: kite-component & kite-use with slots -->
+      <kite-component name="test-card">
+        <template>
+          <div class="test-card-inner">
+            <h4 class="card-title" kite-text="title"></h4>
+            <div class="card-body"><slot>Default Body</slot></div>
+            <div class="card-action">
+              <slot name="btn">Default Button</slot>
+            </div>
+          </div>
+        </template>
+      </kite-component>
+
+      <div id="t8-host">
+        <kite-use id="t8-use" name="test-card" title="Component Test">
+          <p id="t8-slot-body">Custom projected body content</p>
+          <button id="t8-slot-btn" slot="btn">Custom Action</button>
+        </kite-use>
+      </div>
+
+      <!-- Test 9: kite-model & kite-controller -->
+      <kite-model name="test-counter">
+        { count: 100, increment() { this.count += 5; } }
+      </kite-model>
+
+      <kite-controller model="test-counter">
+        <kite-action name="inc" run="increment()"></kite-action>
+      </kite-controller>
+
+      <div id="t9-view" kite-view model="test-counter">
+        <span id="t9-count" kite-text="count"></span>
+        <button id="t9-btn" kite-on-click="inc()">Increment Action</button>
+      </div>
+
+      <!-- Test 10: kite-route & kite-outlet -->
+      <kite-route path="/test-page" view="route-view-sample"></kite-route>
+      <kite-view name="route-view-sample">
+        <div id="t10-routed-content">Routed View Content Loaded</div>
+      </kite-view>
+
+      <!-- Test 11: <kite-api> declarative client -->
+      <kite-api name="local-users" base="test_users" adapter="local">
+        <kite-header name="X-App-Env" value="test"></kite-header>
+      </kite-api>
+
+      <!-- Test 12: Parameterized Route -->
+      <kite-route path="/users/:id" view="user-profile-view"></kite-route>
+      <kite-view name="user-profile-view">
+        <div id="t12-routed-profile">User ID: <span id="t12-user-id" kite-text="params.id"></span></div>
+      </kite-view>
+
+      <kite-outlet id="t10-outlet"></kite-outlet>
+    </div>
+
+    <!-- Load Kite as ES Module -->
+    <script type="module">
+      import Kite from "../src/kite.js";
+
+      // Register custom directive
+      Kite.directive("highlight", (el, expr, scope) => {
+        el.style.backgroundColor = scope[expr] || "yellow";
+      });
+
+      const resultsContainer = document.getElementById("results");
+      const overallBadge = document.getElementById("overall-badge");
+      let passedCount = 0;
+      let failedCount = 0;
+
+      function report(name, isPass, detail) {
+        if (isPass) passedCount++;
+        else failedCount++;
+
+        const card = document.createElement("div");
+        card.className = "test-card";
+        card.innerHTML = `
+        <div class="test-name">
+          <span>${isPass ? "✔" : "✖"} ${name}</span>
+          <span class="badge ${isPass ? "badge-success" : "badge-fail"}">${isPass ? "PASS" : "FAIL"}</span>
+        </div>
+        <div class="test-log">${detail}</div>
+      `;
+        resultsContainer.appendChild(card);
+      }
+
+      // Allow Kite auto-scan to complete
+      setTimeout(() => {
+        // 1. kite-text & kite-on-click
+        const t1Btn = document.getElementById("t1-btn");
+        const t1Text = document.getElementById("t1-text");
+        const initialText = t1Text.textContent;
+        t1Btn.click();
+
+        setTimeout(() => {
+          const afterText = t1Text.textContent;
+          report(
+            "kite-text & kite-on-click",
+            initialText === "0" && afterText === "1",
+            `Initial: "${initialText}", After click: "${afterText}"`,
+          );
+
+          // 2. kite-bind
+          const t2Btn = document.getElementById("t2-btn");
+          const hasTitle = t2Btn.getAttribute("title") === "Hello Kite";
+          const notDisabled = !t2Btn.hasAttribute("disabled");
+          report(
+            "kite-bind (attributes & boolean)",
+            hasTitle && notDisabled,
+            `title: "${t2Btn.getAttribute("title")}", disabled: ${t2Btn.hasAttribute("disabled")}`,
+          );
+
+          // 3. kite-model (two-way binding)
+          const t3Input = document.getElementById("t3-input");
+          const t3Display = document.getElementById("t3-display");
+          const t3Check = document.getElementById("t3-check");
+          t3Input.value = "Grace";
+          t3Input.dispatchEvent(new Event("input"));
+
+          setTimeout(() => {
+            report(
+              "kite-model (input & checkbox)",
+              t3Display.textContent === "Grace" && t3Check.checked === true,
+              `Text Display: "${t3Display.textContent}", Checkbox: ${t3Check.checked}`,
+            );
+
+            // 4. kite-if and kite-else
+            const t4If = document.getElementById("t4-if");
+            const t4Else = document.getElementById("t4-else");
+            report(
+              "kite-if & kite-else conditional rendering",
+              Boolean(t4If) && !t4Else,
+              `If mounted: ${Boolean(t4If)}, Else unmounted: ${!t4Else}`,
+            );
+
+            // 5. kite-show
+            const t5El = document.getElementById("t5-el");
+            report(
+              "kite-show visibility toggle",
+              t5El.style.display === "none",
+              `Computed display: "${t5El.style.display}"`,
+            );
+
+            // 6. kite-class
+            const t6El = document.getElementById("t6-el");
+            report(
+              "kite-class dynamic class toggling",
+              !t6El.classList.contains("active-class"),
+              `Classes: "${t6El.className}"`,
+            );
+
+            // 7. kite-for
+            const t7Items = document.querySelectorAll(".t7-item");
+            const itemTexts = Array.from(t7Items)
+              .map((el) => el.textContent)
+              .join(", ");
+            report(
+              "kite-for loop rendering",
+              t7Items.length === 2 && itemTexts === "First, Second",
+              `Rendered ${t7Items.length} items: [${itemTexts}]`,
+            );
+
+            // 8. Components (<kite-component>, <kite-use>, <slot>)
+            const t8Use = document.getElementById("t8-use");
+            const t8Title = t8Use ? t8Use.querySelector(".card-title") : null;
+            const t8BodySlot = t8Use
+              ? t8Use.querySelector("#t8-slot-body")
+              : null;
+            const t8BtnSlot = t8Use
+              ? t8Use.querySelector("#t8-slot-btn")
+              : null;
+            const compPassed = Boolean(
+              t8Title &&
+              t8Title.textContent === "Component Test" &&
+              t8BodySlot &&
+              t8BtnSlot,
+            );
+            report(
+              "<kite-component> & <kite-use> with Slots",
+              compPassed,
+              `Title text: "${t8Title ? t8Title.textContent : ""}", Body projected: ${Boolean(t8BodySlot)}, Action projected: ${Boolean(t8BtnSlot)}`,
+            );
+
+            // 9. MVCR: <kite-model> and <kite-controller>
+            const t9Btn = document.getElementById("t9-btn");
+            const t9Count = document.getElementById("t9-count");
+            const initialModelCount = t9Count ? t9Count.textContent : "";
+            if (t9Btn) t9Btn.click();
+
+            setTimeout(() => {
+              const afterModelCount = t9Count ? t9Count.textContent : "";
+              report(
+                "<kite-model> & <kite-controller> Actions",
+                initialModelCount === "100" && afterModelCount === "105",
+                `Initial: "${initialModelCount}", After Action click: "${afterModelCount}"`,
+              );
+
+              // 10. MVCR: <kite-route> & <kite-outlet>
+              window.location.hash = '/test-page';
+              setTimeout(() => {
+                const routedContent = document.getElementById("t10-routed-content");
+                const routePassed = Boolean(routedContent && routedContent.textContent.includes("Routed View Content Loaded"));
+                report(
+                  "<kite-route> & <kite-outlet> Navigation",
+                  routePassed,
+                  `Outlet mounted: ${routePassed}`
+                );
+
+                // 11. <kite-api> Client Registration & Headers
+                const client = Kite.getApi("local-users");
+                const clientRegistered = Boolean(client && client.headers["X-App-Env"] === "test");
+                report(
+                  "<kite-api> Declarative Client & Headers",
+                  clientRegistered,
+                  `Client registered: ${Boolean(client)}, Header X-App-Env: "${client ? client.headers["X-App-Env"] : ""}"`
+                );
+
+                // 12. Parameterized Route Navigation (/users/:id)
+                window.location.hash = '/users/888';
+                setTimeout(() => {
+                  const outlet = document.getElementById("t10-outlet");
+                  const profileView = outlet ? outlet.querySelector("#t12-routed-profile") : null;
+                  const userIdSpan = outlet ? outlet.querySelector("#t12-user-id") : null;
+                  const paramPassed = Boolean(profileView && userIdSpan && userIdSpan.textContent === "888");
+                  report(
+                    "Parameterized Route (/users/:id) & Param Scope",
+                    paramPassed,
+                    `Profile view mounted: ${Boolean(profileView)}, Param id text: "${userIdSpan ? userIdSpan.textContent : ""}"`
+                  );
+
+                  // Final Status Update
+                  const allPassed = failedCount === 0;
+                  overallBadge.textContent = allPassed
+                    ? `${passedCount} Passed`
+                    : `${failedCount} Failed`;
+                  overallBadge.className = `badge ${allPassed ? "badge-success" : "badge-fail"}`;
+                }, 60);
+              }, 60);
+            }, 50);
+          }, 50);
+        }, 50);
+      }, 80);
+    </script>
+  </body>
+</html>

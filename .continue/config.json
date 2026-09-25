@@ -1,0 +1,13 @@
+{
+  "name": "Kite",
+  "docs": [
+    {
+      "title": "Kite Agent Guide",
+      "startUrl": "AGENTS.md"
+    },
+    {
+      "title": "Kite LLM Reference",
+      "startUrl": "llms.txt"
+    }
+  ]
+}

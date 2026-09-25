@@ -1,0 +1,65 @@
+<!-- app/views/overview.view.html -->
+<kite-view name="overview-view" model="dashboard">
+  <div class="dash-header">
+    <div>
+      <h1 style="margin: 0; font-size: 1.5rem; font-weight: 800;">System Overview</h1>
+      <p style="margin: 0.25rem 0 0 0; font-size: 0.875rem; color: var(--text-muted);">Real-time operations metrics</p>
+    </div>
+    <button type="button"
+            class="dash-badge"
+            style="background: var(--primary); color: #0f172a; border: none; cursor: pointer; padding: 0.5rem 1rem;"
+            kite-on-click="refresh()">
+      ↻ Refresh Metrics
+    </button>
+  </div>
+
+  <div class="dash-stats-grid">
+    <kite-use name="stat-card"
+              title="Total Revenue"
+              value="revenue"
+              change="+14.2% vs last month"
+              is-positive="true">
+    </kite-use>
+
+    <kite-use name="stat-card"
+              title="Active Subscribers"
+              value="activeUsers"
+              change="+8.1% vs last month"
+              is-positive="true">
+    </kite-use>
+
+    <kite-use name="stat-card"
+              title="Conversion Rate"
+              value="conversionRate"
+              change="-0.4% vs last month"
+              is-positive="false">
+    </kite-use>
+  </div>
+
+  <div class="dash-card">
+    <h3 style="margin-top: 0; font-size: 1.1rem; margin-bottom: 1rem;">Recent Transactions</h3>
+    <table class="dash-table">
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Customer</th>
+          <th>Amount</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr kite-for="order in recentOrders">
+          <td style="font-family: monospace;" kite-text="order.id"></td>
+          <td kite-text="order.customer"></td>
+          <td style="font-weight: 600;" kite-text="order.amount"></td>
+          <td>
+            <span class="dash-badge"
+                  kite-class:badge-success="order.status === 'Completed'"
+                  kite-class:badge-warning="order.status === 'Pending'"
+                  kite-text="order.status"></span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</kite-view>

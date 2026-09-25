@@ -1,0 +1,51 @@
+{
+  "name": "@kitelet/core",
+  "version": "1.0.0",
+  "description": "A teaching toolkit for small, self-contained web apps. HTML is enough for small things.",
+  "homepage": "https://getkite.netlify.app/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kitelet/Kite.git"
+  },
+  "main": "src/kite.js",
+  "module": "src/kite.js",
+  "types": "types/kite.d.ts",
+  "bin": {
+    "kite": "bin/kite.js"
+  },
+  "files": [
+    "dist",
+    "src",
+    "bin",
+    "templates",
+    "types",
+    "docs",
+    ".kite",
+    "AGENTS.md",
+    "CHANGELOG.md",
+    "llms.txt",
+    "llms-full.txt",
+    "README.md",
+    "LICENSE"
+  ],
+  "type": "module",
+  "scripts": {
+    "test": "node tests/run-tests.js",
+    "serve": "npx -y serve .",
+    "build": "npx -y esbuild src/kite.js --bundle --minify --format=iife --global-name=Kite \"--footer:js=if(typeof window!=='undefined'){window.Kite=Kite.default||Kite;}if(typeof globalThis!=='undefined'){globalThis.Kite=globalThis.Kite?.default||globalThis.Kite;}\" --outfile=dist/kite.min.js && node -e \"import('fs').then(fs => { fs.copyFileSync('src/styles/kite.css', 'dist/kite.css'); fs.copyFileSync('dist/kite.min.js', 'docs/assets/kite.min.js'); fs.copyFileSync('dist/kite.css', 'docs/assets/kite.css'); })\""
+  },
+  "keywords": [
+    "html",
+    "reactivity",
+    "toolkit",
+    "teaching",
+    "components",
+    "mvcr",
+    "zero-boilerplate",
+    "educational",
+    "proxy",
+    "directives"
+  ],
+  "author": "Kite Contributors",
+  "license": "MIT"
+}

@@ -1,0 +1,6 @@
+{
+  "template": "starter",
+  "packageManager": "npm",
+  "useTypes": true,
+  "editor": "code"
+}

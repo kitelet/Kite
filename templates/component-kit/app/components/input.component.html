@@ -1,0 +1,12 @@
+<kite-component name="k-input" props="label,type,placeholder,name">
+  <template>
+    <div class="field">
+      <label class="field__label" kite-text="label">Label</label>
+      <input
+        class="field__input"
+        kite-bind:type="type || 'text'"
+        kite-bind:placeholder="placeholder"
+        kite-bind:name="name">
+    </div>
+  </template>
+</kite-component>

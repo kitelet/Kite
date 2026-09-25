@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>📦 Full CRUD Support — Kite Example</title>
+    <link rel="stylesheet" href="../shared.css" />
+    <script type="module" src="../../src/kite.js"></script>
+    <style>
+      .crud-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem; }
+      .crud-search { flex: 1; min-width: 200px; }
+      .crud-table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; font-size: 0.9rem; }
+      .crud-table th { text-align: left; padding: 0.65rem 0.75rem; background: rgba(11, 17, 32, 0.6); color: var(--kite-text-muted); font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid var(--kite-card-border); }
+      .crud-table td { padding: 0.75rem; border-bottom: 1px solid var(--kite-card-border); vertical-align: middle; }
+      .crud-table tr:hover td { background: rgba(51, 65, 85, 0.2); }
+      .action-btns { display: flex; gap: 0.4rem; justify-content: flex-end; }
+      .btn-sm { padding: 0.3rem 0.6rem; font-size: 0.8rem; border-radius: 6px; }
+      .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); display: flex; align-items: center; justify-content: center; z-index: 100; backdrop-filter: blur(4px); padding: 1rem; }
+      .modal-card { background: var(--kite-card-bg); border: 1px solid var(--kite-card-border); border-radius: 12px; width: 100%; max-width: 480px; padding: 1.5rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5); }
+      .form-grid { display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem; }
+      .form-field { display: flex; flex-direction: column; gap: 0.35rem; }
+      .form-field label { font-size: 0.85rem; font-weight: 600; color: var(--kite-text); }
+    </style>
+  </head>
+  <body>
+
+    <!-- Topbar Navigation -->
+    <div class="kite-topbar" style="max-width: 760px;">
+      <a href="../index.html" class="kite-back-link">
+        <svg class="kite-icon" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+        <span>Gallery</span>
+      </a>
+      <span class="kite-chip">📦 Full CRUD Mini-App</span>
+    </div>
+
+    <!-- Main Container & Scope -->
+    <div class="kite-card" style="max-width: 760px;" kite-scope="{
+      users: [
+        { id: 1, name: 'Ada Lovelace', email: 'ada@example.com', role: 'Architect', status: 'Active' },
+        { id: 2, name: 'Alan Turing', email: 'alan@example.com', role: 'Cryptanalyst', status: 'Active' },
+        { id: 3, name: 'Grace Hopper', email: 'grace@example.com', role: 'Engineer', status: 'Pending' }
+      ],
+      search: '',
+      modalOpen: false,
+      editMode: false,
+      editId: null,
+      draft: { name: '', email: '', role: 'Developer', status: 'Active' },
+      toast: '',
+
+      filteredUsers() {
+        if (!this.search.trim()) return this.users;
+        const q = this.search.toLowerCase();
+        return this.users.filter(u => u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q) || u.role.toLowerCase().includes(q));
+      },
+
+      openCreate() {
+        this.editMode = false;
+        this.editId = null;
+        this.draft = { name: '', email: '', role: 'Developer', status: 'Active' };
+        this.modalOpen = true;
+      },
+
+      openEdit(user) {
+        this.editMode = true;
+        this.editId = user.id;
+        this.draft = { name: user.name, email: user.email, role: user.role, status: user.status };
+        this.modalOpen = true;
+      },
+
+      closeModal() {
+        this.modalOpen = false;
+      },
+
+      save() {
+        if (!this.draft.name.trim() || !this.draft.email.trim()) return;
+
+        if (this.editMode) {
+          // Update
+          const idx = this.users.findIndex(u => u.id === this.editId);
+          if (idx !== -1) {
+            this.users[idx] = Object.assign({}, this.users[idx], this.draft);
+            this.showToast('✅ User updated successfully');
+          }
+        } else {
+          // Create
+          const nextId = this.users.length > 0 ? Math.max(...this.users.map(u => u.id)) + 1 : 1;
+          this.users.push(Object.assign({ id: nextId }, this.draft));
+          this.showToast('🎉 User created successfully');
+        }
+        this.modalOpen = false;
+      },
+
+      remove(id) {
+        const idx = this.users.findIndex(u => u.id === id);
+        if (idx !== -1) {
+          const removed = this.users.splice(idx, 1);
+          this.showToast('🗑️ Deleted ' + (removed[0] ? removed[0].name : 'user'));
+        }
+      },
+
+      showToast(msg) {
+        this.toast = msg;
+        setTimeout(() => { this.toast = ''; }, 2500);
+      }
+    }">
+      <div class="crud-header">
+        <div>
+          <h1 class="kite-title" style="margin-bottom: 0.25rem;">👥 User Management (Full CRUD)</h1>
+          <p class="kite-desc" style="margin-bottom: 0;">Complete Create, Read, Update, and Delete operations with reactive state.</p>
+        </div>
+        <button class="kite-btn kite-btn-primary" type="button" kite-on-click="openCreate()">
+          ➕ Create User
+        </button>
+      </div>
+
+      <!-- Live Notification Toast -->
+      <div class="kite-badge" style="margin-bottom: 1rem; width: 100%; justify-content: center; background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3);"
+           kite-if="toast" kite-text="toast"></div>
+
+      <!-- Search & Filters -->
+      <div style="margin-bottom: 1rem;">
+        <input class="kite-input crud-search" type="text" placeholder="🔍 Search users by name, email, or role..." kite-model="search" />
+      </div>
+
+      <!-- Data Table (Read) -->
+      <div style="overflow-x: auto;">
+        <table class="crud-table">
+          <thead>
+            <tr>
+              <th style="width: 50px;">ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th style="text-align: right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr kite-for="u in filteredUsers()">
+              <td style="font-family: monospace; color: var(--kite-text-muted);" kite-text="'#' + u.id">#1</td>
+              <td style="font-weight: 600; color: #ffffff;" kite-text="u.name">User</td>
+              <td style="color: var(--kite-primary);" kite-text="u.email">email</td>
+              <td kite-text="u.role">role</td>
+              <td>
+                <span class="kite-badge"
+                      kite-class:bg-emerald-500="u.status === 'Active'"
+                      kite-text="u.status">Active</span>
+              </td>
+              <td style="text-align: right;">
+                <div class="action-btns">
+                  <button class="kite-btn kite-btn-secondary btn-sm" type="button" kite-on-click="openEdit(u)">✏️ Edit</button>
+                  <button class="kite-btn kite-btn-danger btn-sm" type="button" kite-on-click="remove(u.id)">🗑️ Delete</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Empty State -->
+      <div class="kite-empty" kite-if="filteredUsers().length === 0">
+        No users found matching your search. Click &ldquo;Create User&rdquo; to add one.
+      </div>
+
+      <div style="margin-top: 1.25rem; font-size: 0.85rem; color: var(--kite-text-muted); display: flex; justify-content: space-between;">
+        <span>Total Records: <strong kite-text="users.length"></strong></span>
+        <span>Filtered: <strong kite-text="filteredUsers().length"></strong></span>
+      </div>
+
+      <!-- Modal Dialog (Create & Update) -->
+      <div class="modal-overlay" kite-if="modalOpen" kite-on-click.self="closeModal()">
+        <div class="modal-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--kite-card-border); padding-bottom: 0.75rem;">
+            <h2 style="margin: 0; font-size: 1.2rem; color: #ffffff;">
+              <span kite-if="!editMode">➕ Create New User</span>
+              <span kite-if="editMode">✏️ Edit User</span>
+            </h2>
+            <button type="button" style="background: transparent; border: none; color: var(--kite-text-muted); font-size: 1.25rem; cursor: pointer;" kite-on-click="closeModal()">✕</button>
+          </div>
+
+          <form class="form-grid" kite-on-submit.prevent="save()">
+            <div class="form-field">
+              <label>Full Name</label>
+              <input class="kite-input" type="text" placeholder="e.g. Marie Curie" kite-model="draft.name" required />
+            </div>
+
+            <div class="form-field">
+              <label>Email Address</label>
+              <input class="kite-input" type="email" placeholder="marie@example.com" kite-model="draft.email" required />
+            </div>
+
+            <div class="form-field">
+              <label>Role</label>
+              <input class="kite-input" type="text" placeholder="e.g. Lead Scientist" kite-model="draft.role" required />
+            </div>
+
+            <div class="form-field">
+              <label>Status</label>
+              <select class="kite-input" kite-model="draft.status" style="background: var(--kite-input-bg); color: var(--kite-text);">
+                <option value="Active">Active</option>
+                <option value="Pending">Pending</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 0.5rem;">
+              <button class="kite-btn kite-btn-secondary" type="button" kite-on-click="closeModal()">Cancel</button>
+              <button class="kite-btn kite-btn-primary" type="submit">
+                <span kite-if="!editMode">💾 Create</span>
+                <span kite-if="editMode">💾 Save Changes</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Official Banner Footer -->
+    <footer class="kite-footer" style="max-width: 760px;">
+      <a href="../index.html" title="Kite Examples Gallery">
+        <img src="../../assets/kite-banner.svg" alt="Kite Toolkit" class="kite-footer-banner">
+      </a>
+      <div class="kite-footer-meta">
+        HTML is enough for small things &bull; <a href="../index.html">← All Examples</a>
+      </div>
+    </footer>
+
+  </body>
+</html>

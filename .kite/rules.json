@@ -1,0 +1,68 @@
+{
+  "$schema": "./schemas/rules-1.0.json",
+  "rules": [
+    {
+      "id": "network-in-model-only",
+      "severity": "error",
+      "description": "Only Models may call the network.",
+      "check": "No kite-api usage inside kite-view or kite-controller.",
+      "rationale": "Separation of concerns ensures predictable state flow and testability."
+    },
+    {
+      "id": "text-escapes",
+      "severity": "info",
+      "description": "kite-text always escapes HTML.",
+      "check": "Always use kite-text for text content; use kite-html only when raw HTML is explicitly intended.",
+      "rationale": "Strict escaping by default neutralizes Cross-Site Scripting (XSS)."
+    },
+    {
+      "id": "no-eval",
+      "severity": "error",
+      "description": "Kite never uses eval() or new Function().",
+      "check": "Zero eval calls anywhere in runtime, plugins, or user expressions.",
+      "rationale": "Permits full operation under strict Content Security Policy (CSP) environments."
+    },
+    {
+      "id": "single-global",
+      "severity": "error",
+      "description": "Only window.Kite is global.",
+      "check": "No additional window properties or prototype tampering.",
+      "rationale": "Prevents collision with existing host applications and backend templates."
+    },
+    {
+      "id": "no-unknown-directive",
+      "severity": "error",
+      "description": "Every kite-* attribute must be defined in capabilities.json.",
+      "check": "ESLint kite/no-unknown-directive or compiler scanner check.",
+      "rationale": "Catches typos such as kite-fro instead of kite-for early."
+    },
+    {
+      "id": "isolated-components",
+      "severity": "warning",
+      "description": "Components must communicate via props and events, not direct parent scope access.",
+      "check": "Ensure <kite-component> scopes do not rely on implicit parent scope leaks.",
+      "rationale": "Preserves component portability and isolation."
+    },
+    {
+      "id": "no-circular-component",
+      "severity": "error",
+      "description": "Components must not recursively instantiate themselves infinitely.",
+      "check": "Recursion depth limiter (max 32 levels).",
+      "rationale": "Prevents browser crash and infinite call stacks."
+    },
+    {
+      "id": "loop-safety-limit",
+      "severity": "warning",
+      "description": "Dynamic loops should not exceed comfortable limits (2,000 items max).",
+      "check": "kite-for loops exceeding safety threshold are truncated with warnings.",
+      "rationale": "Maintains 60fps rendering without virtual-DOM overhead."
+    },
+    {
+      "id": "safe-attribute-order",
+      "severity": "info",
+      "description": "Follow the nine-slot attribute ordering convention for readable markup.",
+      "check": "identity -> state -> data-in -> render -> control -> events -> lifecycle -> escape -> config",
+      "rationale": "Ensures visual predictability across teams and AI code generation."
+    }
+  ]
+}

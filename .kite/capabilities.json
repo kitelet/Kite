@@ -1,0 +1,411 @@
+{
+  "$schema": "./schemas/capabilities-1.0.json",
+  "directives": {
+    "kite-scope": {
+      "syntax": "kite-scope=\"{ key: value, ... }\"",
+      "purpose": "Creates an isolated or inherited reactive state scope on a DOM element using native JavaScript Proxy.",
+      "example": "<div kite-scope=\"{ count: 0 }\">...</div>",
+      "since": "1.0.0"
+    },
+    "kite-text": {
+      "syntax": "kite-text=\"expression\"",
+      "purpose": "Sets the textContent of the element, automatically evaluating expressions and strictly HTML-escaping text.",
+      "example": "<span kite-text=\"user.name\"></span>",
+      "since": "1.0.0"
+    },
+    "kite-html": {
+      "syntax": "kite-html=\"expression\"",
+      "purpose": "Sets the innerHTML of the element using the built-in sanitizer to prevent XSS injection.",
+      "example": "<div kite-html=\"post.body\"></div>",
+      "since": "1.0.0"
+    },
+    "kite-bind": {
+      "syntax": "kite-bind:attribute=\"expression\"",
+      "purpose": "Dynamically binds an HTML attribute or boolean property to an evaluated expression.",
+      "example": "<input kite-bind:disabled=\"loading\" kite-bind:placeholder=\"placeholderText\">",
+      "since": "1.0.0"
+    },
+    "kite-model": {
+      "syntax": "kite-model=\"property\"",
+      "purpose": "Enables two-way data binding on inputs, textareas, checkboxes, radio buttons, and selects.",
+      "example": "<input type=\"text\" kite-model=\"username\">",
+      "since": "1.0.0"
+    },
+    "kite-for": {
+      "syntax": "kite-for=\"item in items [where filterExpr]\"",
+      "purpose": "Renders repeated elements dynamically over arrays, objects, or number ranges.",
+      "example": "<li kite-for=\"item in items where item.active\"><span kite-text=\"item.name\"></span></li>",
+      "since": "1.0.0"
+    },
+    "kite-if": {
+      "syntax": "kite-if=\"expression\"",
+      "purpose": "Conditionally renders element into DOM if expression evaluates to truthy.",
+      "example": "<div kite-if=\"isLoggedIn\">Welcome back!</div>",
+      "related": ["kite-elif", "kite-else"],
+      "since": "1.0.0"
+    },
+    "kite-elif": {
+      "syntax": "kite-elif=\"expression\"",
+      "purpose": "Alternative conditional branch following kite-if.",
+      "example": "<div kite-elif=\"isGuest\">Browsing as guest</div>",
+      "related": ["kite-if", "kite-else"],
+      "since": "1.0.0"
+    },
+    "kite-else": {
+      "syntax": "kite-else",
+      "purpose": "Default fallback branch following kite-if or kite-elif.",
+      "example": "<div kite-else>Please sign in</div>",
+      "related": ["kite-if", "kite-elif"],
+      "since": "1.0.0"
+    },
+    "kite-show": {
+      "syntax": "kite-show=\"expression\"",
+      "purpose": "Toggles element visibility via CSS display: none without removing it from the DOM tree.",
+      "example": "<div kite-show=\"isOpen\">Modal content</div>",
+      "since": "1.0.0"
+    },
+    "kite-on": {
+      "syntax": "kite-on-event[.modifiers]=\"expression\"",
+      "purpose": "Attaches event listeners with support for modifiers (prevent, stop, once, enter, escape, debounce, throttle).",
+      "example": "<button kite-on-click.prevent=\"submit()\">Submit</button>",
+      "modifiers": ["prevent", "stop", "once", "self", "enter", "escape", "space", "tab", "delete", "backspace", "up", "down", "left", "right", "debounce", "throttle"],
+      "since": "1.0.0"
+    },
+    "kite-class": {
+      "syntax": "kite-class:className=\"expression\"",
+      "purpose": "Toggles a specific CSS class when the expression evaluates to truthy.",
+      "example": "<div kite-class:active=\"isActive\" kite-class:is-loading=\"loading\">...</div>",
+      "since": "1.0.0"
+    },
+    "kite-style": {
+      "syntax": "kite-style:cssProperty=\"expression\"",
+      "purpose": "Dynamically sets inline style properties.",
+      "example": "<div kite-style:color=\"textColor\" kite-style:opacity=\"progress\">...</div>",
+      "since": "1.0.0"
+    },
+    "kite-reset": {
+      "syntax": "kite-reset",
+      "purpose": "Restores reactive scope state back to its initial initialized values on click.",
+      "example": "<button kite-reset>Reset Form</button>",
+      "since": "1.0.0"
+    },
+    "kite-cloak": {
+      "syntax": "kite-cloak",
+      "purpose": "Hides uncompiled elements until Kite runtime finishes scanning to eliminate Flash of Unstyled Content (FOUC).",
+      "example": "<body kite-cloak>...</body>",
+      "since": "1.0.0"
+    },
+    "kite-skip": {
+      "syntax": "kite-skip",
+      "purpose": "Instructs the Kite scanner to skip compiling the element and all of its descendants.",
+      "example": "<pre kite-skip><code>{{ raw_template }}</code></pre>",
+      "since": "1.0.0"
+    },
+    "kite-persist": {
+      "syntax": "kite-persist=\"storageKey\" [kite-persist:session] [kite-persist:fields=\"a,b\"]",
+      "purpose": "Syncs reactive scope state with localStorage or sessionStorage automatically.",
+      "example": "<div kite-scope=\"{ theme: 'dark' }\" kite-persist=\"user-prefs\">...</div>",
+      "since": "1.0.0"
+    },
+    "kite-validate": {
+      "syntax": "kite-validate=\"rule1|rule2:param\"",
+      "purpose": "Validates form fields with built-in or custom rules and publishes field errors.",
+      "example": "<input kite-model=\"email\" kite-validate=\"required|email\">",
+      "since": "1.0.0"
+    },
+    "kite-emit": {
+      "syntax": "kite-emit:eventName=\"expression\"",
+      "purpose": "Dispatches a custom DOM event on the element when the expression triggers.",
+      "example": "<button kite-on-click=\"save()\" kite-emit:saved=\"item\">Save</button>",
+      "since": "1.0.0"
+    },
+    "kite-copy": {
+      "syntax": "kite-copy=\"expression\"",
+      "purpose": "Copies the evaluated text expression into the user clipboard on click.",
+      "example": "<button kite-copy=\"shareUrl\">Copy Link</button>",
+      "since": "1.0.0"
+    },
+    "kite-poll": {
+      "syntax": "kite-poll.5s=\"fetchUpdates()\"",
+      "purpose": "Executes expression repeatedly at a specified time interval.",
+      "example": "<div kite-poll.30s=\"refreshData()\">...</div>",
+      "since": "1.0.0"
+    },
+    "kite-shortcut": {
+      "syntax": "kite-shortcut.ctrl-k=\"openSearch()\"",
+      "purpose": "Binds a global keyboard shortcut to evaluate an expression.",
+      "example": "<input kite-shortcut.escape=\"closeModal()\">",
+      "since": "1.0.0"
+    },
+    "kite-watch": {
+      "syntax": "kite-watch:prop=\"handler()\"",
+      "purpose": "Observes specific property mutations and executes a callback.",
+      "example": "<div kite-watch:query=\"onQueryChange()\">...</div>",
+      "since": "1.0.0"
+    },
+    "kite-init": {
+      "syntax": "kite-init=\"expression\"",
+      "purpose": "Runs expression immediately once when the element is bound.",
+      "example": "<div kite-init=\"loadUsers()\">...</div>",
+      "since": "1.0.0"
+    },
+    "kite-computed": {
+      "syntax": "kite-computed:prop=\"expression\" or kite-computed=\"{ prop: 'expr' }\"",
+      "purpose": "Calculates and maintains reactive derived state values on the scope.",
+      "example": "<div kite-computed:double=\"count * 2\">...</div>",
+      "since": "1.0.0"
+    },
+    "kite-format": {
+      "syntax": "kite-format=\"date|number|currency\"",
+      "purpose": "Formats text contents of an element as date, formatted number, or currency.",
+      "example": "<span kite-text=\"price\" kite-format=\"currency\"></span>",
+      "since": "1.0.0"
+    }
+  },
+  "tags": {
+    "kite-component": {
+      "purpose": "Defines a reusable template component with isolated scope, props, and slots.",
+      "attributes": ["name", "props"],
+      "example": "<kite-component name=\"modal-dialog\"><template>...</template></kite-component>",
+      "since": "1.0.0"
+    },
+    "kite-use": {
+      "purpose": "Instantiates a declared component, passing props and slot projections.",
+      "attributes": ["name"],
+      "example": "<kite-use name=\"modal-dialog\" title=\"Settings\"><p>Body text</p></kite-use>",
+      "since": "1.0.0"
+    },
+    "slot": {
+      "purpose": "Defines default or named content injection targets inside a <kite-component> template.",
+      "attributes": ["name"],
+      "example": "<slot></slot> or <slot name=\"actions\"></slot>",
+      "since": "1.0.0"
+    },
+    "kite-model": {
+      "purpose": "Defines a named global reactive data model with initial state, methods, and optional API adapter bindings.",
+      "attributes": ["name", "api", "kite-persist"],
+      "example": "<kite-model name=\"todos\">{ items: [], add(t) { this.items.push(t); } }</kite-model>",
+      "since": "1.0.0"
+    },
+    "kite-view": {
+      "purpose": "Binds a DOM subtree to a named model scope or serves as a routable template target.",
+      "attributes": ["name", "model"],
+      "example": "<div kite-view=\"todos-view\" model=\"todos\">...</div>",
+      "since": "1.0.0"
+    },
+    "kite-controller": {
+      "purpose": "Encapsulates named event action handlers for a model directly in HTML.",
+      "attributes": ["name", "model"],
+      "example": "<kite-controller name=\"todos-ctrl\" model=\"todos\"><kite-action name=\"clear\">...</kite-action></kite-controller>",
+      "since": "1.0.0"
+    },
+    "kite-route": {
+      "purpose": "Declares client-side hash routing rules mapping URL hash paths to view templates.",
+      "attributes": ["path", "view"],
+      "example": "<kite-route path=\"/dashboard\" view=\"dashboard-view\"></kite-route>",
+      "since": "1.0.0"
+    },
+    "kite-outlet": {
+      "purpose": "DOM container where currently active route views are mounted.",
+      "attributes": [],
+      "example": "<kite-outlet></kite-outlet>",
+      "since": "1.0.0"
+    },
+    "kite-api": {
+      "purpose": "Declarative REST/fetch client definition with base URL and default headers.",
+      "attributes": ["name", "base", "adapter"],
+      "example": "<kite-api name=\"products-api\" base=\"/api/v1/products\"></kite-api>",
+      "since": "1.0.0"
+    },
+    "kite-store": {
+      "purpose": "Global shared reactive store accessible across all components and views.",
+      "attributes": ["name", "kite-persist"],
+      "example": "<kite-store name=\"auth\">{ token: null, user: null }</kite-store>",
+      "since": "1.0.0"
+    },
+    "kite-config": {
+      "purpose": "Configures runtime options (CSP, cloak, logging, autoScan) declaratively.",
+      "attributes": [],
+      "example": "<kite-config>{ \"logging\": false, \"autoScan\": true }</kite-config>",
+      "since": "1.0.0"
+    },
+    "kite-include": {
+      "purpose": "Inlines HTML partial files into the document shell at build time or development.",
+      "attributes": ["src"],
+      "example": "<kite-include src=\"app/views/home.view.html\"></kite-include>",
+      "since": "1.0.0"
+    }
+  },
+  "apis": {
+    "Kite.directive": {
+      "signature": "Kite.directive(name: string, handler: Function, opts?: Object): Function",
+      "purpose": "Registers a custom directive with priority, watchers, and unregister return.",
+      "returns": "() => void",
+      "since": "1.0.0"
+    },
+    "Kite.helper": {
+      "signature": "Kite.helper(name: string, fn: Function, opts?: Object): Function",
+      "purpose": "Registers an expression helper callable in templates.",
+      "returns": "() => void",
+      "since": "1.0.0"
+    },
+    "Kite.rule": {
+      "signature": "Kite.rule(name: string, fn: Function): Function",
+      "purpose": "Registers a custom validation rule.",
+      "returns": "() => void",
+      "since": "1.0.0"
+    },
+    "Kite.adapter": {
+      "signature": "Kite.adapter(name: string, handler: Function | Object): Function",
+      "purpose": "Registers a custom HTTP or protocol adapter for API clients.",
+      "returns": "() => void",
+      "since": "1.0.0"
+    },
+    "Kite.middleware": {
+      "signature": "Kite.middleware(name: string, fn: Function): Function",
+      "purpose": "Registers an API client request/response interceptor.",
+      "returns": "() => void",
+      "since": "1.0.0"
+    },
+    "Kite.component": {
+      "signature": "Kite.component(name: string, def: Object): Function",
+      "purpose": "Registers a web component programmatically.",
+      "returns": "() => void",
+      "since": "1.0.0"
+    },
+    "Kite.model": {
+      "signature": "Kite.model(name: string, state?: Object, api?: string | Object): Proxy",
+      "purpose": "Creates or retrieves a named reactive model proxy.",
+      "returns": "Proxy",
+      "since": "1.0.0"
+    },
+    "Kite.view": {
+      "signature": "Kite.view(name: string, templateHtml?: string, modelName?: string): Object",
+      "purpose": "Registers or retrieves a named view template.",
+      "returns": "Object",
+      "since": "1.0.0"
+    },
+    "Kite.route": {
+      "signature": "Kite.route(path: string, viewName: string): void",
+      "purpose": "Registers a client-side hash route programmatically.",
+      "returns": "void",
+      "since": "1.0.0"
+    },
+    "Kite.store": {
+      "signature": "Kite.store(name: string, initial?: Object): Proxy",
+      "purpose": "Creates or retrieves a named global reactive store.",
+      "returns": "Proxy",
+      "since": "1.0.0"
+    },
+    "Kite.hook": {
+      "signature": "Kite.hook(name: string, fn: Function): Function",
+      "purpose": "Registers a lifecycle hook callback.",
+      "returns": "() => void",
+      "since": "1.0.0"
+    },
+    "Kite.plugin": {
+      "signature": "Kite.plugin(name: string, fn: Function): Function",
+      "purpose": "Installs a plugin bundle.",
+      "returns": "() => void",
+      "since": "1.0.0"
+    },
+    "Kite.config": {
+      "signature": "Kite.config(optsOrKey?: Object | string, val?: any): any",
+      "purpose": "Reads or updates global runtime configuration.",
+      "returns": "any",
+      "since": "1.0.0"
+    },
+    "Kite.override": {
+      "signature": "Kite.override(name: string, fn: Function): Function",
+      "purpose": "Replaces a built-in directive while preserving the original.",
+      "returns": "() => void",
+      "since": "1.0.0"
+    },
+    "Kite.original": {
+      "signature": "Kite.original(name: string): Function | undefined",
+      "purpose": "Retrieves the original implementation of an overridden directive.",
+      "returns": "Function | undefined",
+      "since": "1.0.0"
+    },
+    "Kite.disable": {
+      "signature": "Kite.disable(names: string | string[]): void",
+      "purpose": "Temporarily disables directives.",
+      "returns": "void",
+      "since": "1.0.0"
+    },
+    "Kite.enable": {
+      "signature": "Kite.enable(names: string | string[]): void",
+      "purpose": "Re-enables disabled directives.",
+      "returns": "void",
+      "since": "1.0.0"
+    },
+    "Kite.inspect": {
+      "signature": "Kite.inspect(target?: string | Element): Object",
+      "purpose": "Introspects registered directives, helpers, stores, and element bindings.",
+      "returns": "Object",
+      "since": "1.0.0"
+    },
+    "Kite.state": {
+      "signature": "Kite.state(path?: string): any",
+      "purpose": "Reads or walks dot-separated state across all models and stores.",
+      "returns": "any",
+      "since": "1.0.0"
+    },
+    "Kite.scan": {
+      "signature": "Kite.scan(root?: Element): Function",
+      "purpose": "Scans and compiles DOM tree with Kite reactive directives.",
+      "returns": "() => void",
+      "since": "1.0.0"
+    },
+    "Kite.navigate": {
+      "signature": "Kite.navigate(path: string): void",
+      "purpose": "Navigates to a client-side hash route programmatically.",
+      "returns": "void",
+      "since": "1.0.0"
+    },
+    "Kite.evaluate": {
+      "signature": "Kite.evaluate(expr: string, scope?: Object): any",
+      "purpose": "Safely evaluates an expression string against a scope without eval.",
+      "returns": "any",
+      "since": "1.0.0"
+    }
+  },
+  "helpers": {
+    "uppercase": {
+      "signature": "uppercase(str: string): string",
+      "purpose": "Converts string to uppercase.",
+      "example": "uppercase(user.name)",
+      "since": "1.0.0"
+    },
+    "lowercase": {
+      "signature": "lowercase(str: string): string",
+      "purpose": "Converts string to lowercase.",
+      "example": "lowercase(user.email)",
+      "since": "1.0.0"
+    },
+    "capitalize": {
+      "signature": "capitalize(str: string): string",
+      "purpose": "Capitalizes the first character of string.",
+      "example": "capitalize(role)",
+      "since": "1.0.0"
+    },
+    "currency": {
+      "signature": "currency(num: number): string",
+      "purpose": "Formats number as USD currency string ($XX.XX).",
+      "example": "currency(item.price)",
+      "since": "1.0.0"
+    },
+    "json": {
+      "signature": "json(obj: any): string",
+      "purpose": "Serializes value to formatted JSON string.",
+      "example": "json(debugData)",
+      "since": "1.0.0"
+    },
+    "navigate": {
+      "signature": "navigate(path: string): void",
+      "purpose": "Helper to trigger client-side hash navigation.",
+      "example": "navigate('/todos')",
+      "since": "1.0.0"
+    }
+  }
+}

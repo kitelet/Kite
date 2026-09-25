@@ -1,0 +1,11 @@
+<kite-component name="todo-item" props="item">
+  <template>
+    <li class="todo-item" kite-bind:class="item.done ? 'done' : ''">
+      <span kite-text="item.text">Task</span>
+      <div class="todo-actions">
+        <button class="btn btn-sm" kite-on-click="todos.toggle(item.id)">✓</button>
+        <button class="btn btn-sm btn-danger" kite-on-click="todos.remove(item.id)">✕</button>
+      </div>
+    </li>
+  </template>
+</kite-component>

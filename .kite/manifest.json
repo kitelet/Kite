@@ -1,0 +1,31 @@
+{
+  "$schema": "./schemas/manifest-1.0.json",
+  "kite": "1.0.0",
+  "project": {
+    "name": "@kitelet/core",
+    "template": "framework-core",
+    "description": "Kite — HTML is enough for small things. A teaching toolkit for small, self-contained web apps."
+  },
+  "structure": {
+    "models": "app/models/*.model.html",
+    "views": "app/views/*.view.html",
+    "controllers": "app/controllers/*.controller.html",
+    "components": "app/components/*.component.html",
+    "routes": "app/routes/routes.html",
+    "api": "app/api/*.api.html",
+    "shell": "public/index.html",
+    "styles": "styles/**/*.css"
+  },
+  "counts": {
+    "models": 0,
+    "views": 0,
+    "controllers": 0,
+    "components": 0,
+    "routes": 0,
+    "api": 0
+  },
+  "entryPoints": {
+    "html": "index.html",
+    "runtime": "dist/kite.min.js"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "port": 3000,
+    "host": "localhost",
+    "open": true,
+    "reload": true
+  },
+  "build": {
+    "out": "dist",
+    "minify": true,
+    "sourcemap": false,
+    "inlineIncludes": true
+  },
+  "runtime": {
+    "mode": "dev",
+    "routing": "hash",
+    "sanitize": "strict",
+    "prefix": "kite"
+  }
+}

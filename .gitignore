@@ -1,0 +1,80 @@
+# =============================================================================
+# Kite (.gitignore) — Comprehensive Deployment & Security Exclusions
+# =============================================================================
+
+# 1. External Tools & Extensions (Core deployed first)
+tools/
+
+# 2. Environment, Tokens, & Secrets
+.env
+.env.*
+*.env
+*.pem
+*.key
+*.cert
+*.crt
+.npmrc
+*secret*
+
+# 3. Dependencies & Package Managers
+node_modules/
+package-lock.json
+.pnp
+.pnp.js
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# 4. Local Builds, Archives & Package Tarballs
+dist/
+*.tgz
+*.tar.gz
+
+# 5. Scratch, Temporary, Cache, & Agent Artifacts
+scratch/
+tmp/
+temp/
+*.tmp
+*.temp
+.cache/
+.eslintcache
+.tempmediaStorage/
+*.tsbuildinfo
+.project-goals.json
+Skills.md
+
+# 6. Test & Coverage Reports
+coverage/
+.nyc_output/
+reports/
+
+# 7. Deployment Platform CLI Directories
+.netlify/
+.vercel/
+.serverless/
+
+# 8. Operating System & Filesystem Junk
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+desktop.ini
+
+# 9. IDE, Editor, & Local Workspace Configurations
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+*.swo
+*~
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json

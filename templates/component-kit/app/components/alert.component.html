@@ -1,0 +1,7 @@
+<kite-component name="k-alert" props="type,message">
+  <template>
+    <div class="alert" kite-bind:class="'alert--' + (type || 'info')" role="alert">
+      <span kite-text="message">Message</span>
+    </div>
+  </template>
+</kite-component>

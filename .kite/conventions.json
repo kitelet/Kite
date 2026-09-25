@@ -1,0 +1,56 @@
+{
+  "$schema": "./schemas/conventions-1.0.json",
+  "markupOrder": [
+    "identity",
+    "state",
+    "data-in",
+    "render",
+    "control",
+    "events",
+    "lifecycle",
+    "escape",
+    "config"
+  ],
+  "markupOrderMap": {
+    "identity": ["id", "class", "name", "data-*"],
+    "state": ["kite-scope", "kite-persist", "kite-persist:session", "kite-persist:fields"],
+    "data-in": ["kite-model", "kite-bind:*"],
+    "render": [
+      "kite-text",
+      "kite-html",
+      "kite-show",
+      "kite-class:*",
+      "kite-style:*",
+      "kite-format"
+    ],
+    "control": [
+      "kite-if",
+      "kite-elif",
+      "kite-else",
+      "kite-for",
+      "kite-when",
+      "kite-each"
+    ],
+    "events": ["kite-on-*", "kite-emit:*", "kite-reset", "kite-copy", "kite-shortcut.*"],
+    "lifecycle": ["kite-init", "kite-watch:*", "kite-poll.*", "kite-cloak"],
+    "escape": ["kite-skip"],
+    "config": ["kite-config:*", "kite-debounce", "kite-throttle"]
+  },
+  "naming": {
+    "files": "kebab-case",
+    "functions": "camelCase",
+    "constants": "UPPER_SNAKE",
+    "attributes": "kite-kebab-case",
+    "models": "snake_case_plural",
+    "views": "kebab-case-view",
+    "components": "kebab-case"
+  },
+  "filePatterns": {
+    "model": "{name}.model.html",
+    "view": "{name}.view.html",
+    "controller": "{name}.controller.html",
+    "component": "{name}.component.html",
+    "api": "{name}.api.html",
+    "layout": "{name}.layout.html"
+  }
+}

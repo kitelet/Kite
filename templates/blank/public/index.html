@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kite Blank App</title>
+  <link rel="stylesheet" href="/kite.css">
+  <script src="/kite.js" defer></script>
+</head>
+<body>
+  <main kite-scope="{ count: 0 }">
+    <h1>Welcome to Kite</h1>
+    <p>HTML is enough for small things.</p>
+    <div>
+      <button kite-on-click="count--">−</button>
+      <span kite-text="count">0</span>
+      <button kite-on-click="count++">+</button>
+    </div>
+  </main>
+</body>
+</html>

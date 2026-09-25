@@ -1,0 +1,2537 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kite — The Teaching Toolkit for Reactive HTML</title>
+    <meta
+      name="description"
+      content="HTML is enough for small things. A zero-build teaching toolkit with declarative components, reactive state, and MVCR directly in HTML."
+    />
+    <link rel="icon" type="image/svg+xml" href="assets/kite.svg" />
+
+    <!-- Typography: Plus Jakarta Sans (Headings/Display), Nunito (Clean Body), JetBrains Mono (Code) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Nunito:ital,wght@0,300..800;1,300..800&family=Plus+Jakarta+Sans:ital,wght@0,400..800;1,400..800&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="assets/kite.css" />
+    <link rel="stylesheet" href="app.css" />
+
+    <!-- Markdown parser with built-in offline engine fallback -->
+    <script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+    <!-- Syntax Highlighting Engine (Prism.js with robust offline fallback) -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup-templating.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-php.min.js"></script>
+    <!-- Kite runtime (local bundle with zero external dependencies) -->
+    <script src="assets/kite.min.js"></script>
+  </head>
+  <body>
+    <!-- ========================================================================= -->
+    <!-- KITE MODEL: Reactive State Container for Landing & Documentation          -->
+    <!-- ========================================================================= -->
+    <kite-model name="docs">
+      { mode: 'landing', currentPath: 'README.md', currentTitle: 'Documentation
+      Overview', searchQuery: '', darkMode: true, sidebarOpen: false, loading:
+      false, renderedHtml: '', headings: [], prevDoc: null, nextDoc: null,
+      bundleSizeMin: '86.7 KB min', bundleSizeGzip: '~26.1 KB gzip',
+      bundleSizeBytes: 88761 }
+    </kite-model>
+
+    <!-- App Wrapper bound to the "docs" Model -->
+    <div class="doc-app" kite-view="docs">
+      <!-- Topbar Navigation Bar -->
+      <header class="doc-topbar">
+        <div style="display: flex; align-items: center">
+          <div class="brand-section" kite-on-click="navigateHome()">
+            <img
+              src="assets/kite.svg"
+              alt="Kite Logo"
+              class="brand-logo"
+            />
+          </div>
+
+          <!-- Navigation Tabs: Home vs Docs -->
+          <nav class="nav-links">
+            <span
+              class="nav-tab"
+              kite-class:active="mode === 'landing'"
+              kite-on-click="navigateHome()"
+            >
+              Home
+            </span>
+            <span
+              class="nav-tab"
+              kite-class:active="mode === 'docs'"
+              kite-on-click="loadDoc('1-basics/getting-started.md')"
+            >
+              Documentation
+            </span>
+            <a
+              href="../examples/index.html"
+              class="nav-tab"
+              style="text-decoration: none"
+              >Examples</a
+            >
+          </nav>
+        </div>
+
+        <div class="topbar-actions">
+          <!-- Live Search Input (Shown in Docs mode or desktop) -->
+          <div class="search-input-wrapper" kite-show="mode === 'docs'">
+            <svg
+              class="search-icon"
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input
+              type="search"
+              class="search-input"
+              placeholder="Search 28 guides..."
+              kite-model="searchQuery"
+            />
+          </div>
+
+          <!-- Dark / Light Theme Toggle -->
+          <button
+            class="btn-icon"
+            kite-on-click="toggleTheme()"
+            title="Toggle theme"
+          >
+            <!-- Sun icon when dark mode is on -->
+            <svg
+              kite-show="darkMode"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <!-- Moon icon when dark mode is off -->
+            <svg
+              kite-show="!darkMode"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              style="display: none"
+            >
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+
+          <!-- GitHub Repository Link -->
+          <a
+            href="https://github.com/kitelet/kite"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-icon"
+            title="View source on GitHub"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+              />
+            </svg>
+          </a>
+
+          <!-- Mobile Drawer Toggle (Docs mode only) -->
+          <button
+            class="btn-icon mobile-toggle"
+            title="Toggle navigation menu"
+            kite-show="mode === 'docs'"
+            kite-on-click="toggleSidebar()"
+          >
+            <svg
+              kite-show="!sidebarOpen"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+            <svg
+              kite-show="sidebarOpen"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              style="display: none"
+            >
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- ═══════════════════════════════════════════════════════════════════════ -->
+      <!-- VIEW A: MODERN LANDING PAGE                                            -->
+      <!-- ═══════════════════════════════════════════════════════════════════════ -->
+      <section class="landing-view" kite-show="mode === 'landing'">
+        <!-- Hero Section -->
+        <div class="hero-section">
+          <!-- Mascot / Emblem -->
+          <div class="hero-emblem-wrap">
+            <img
+              src="assets/kite.svg"
+              alt="Kite"
+              class="hero-emblem"
+            />
+          </div>
+
+          <h1 class="hero-title">
+            HTML is enough for
+            <span class="hero-title-accent">small things.</span>
+          </h1>
+
+          <p class="hero-subtitle">
+            A teaching toolkit for small, self-contained web apps. Declarative
+            components, reactive state, and MVCR architecture directly in
+            standard HTML — with zero build step and zero user JavaScript.
+          </p>
+
+          <!-- Quick Install Snippet Bar -->
+          <div class="hero-snippet-pill">
+            <span class="snippet-prompt">$</span>
+            <code class="snippet-code">npm i @kitelet/core</code>
+            <button class="snippet-copy-btn" id="hero-copy-btn" title="Copy install command">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              <span>Copy</span>
+            </button>
+          </div>
+
+          <div class="hero-ctas">
+            <button
+              class="btn btn-primary"
+              kite-on-click="loadDoc('1-basics/getting-started.md')"
+            >
+              <span>Explore Documentation</span>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+            <a href="../examples/index.html" class="btn btn-secondary">
+              <span>Live Examples</span>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                ></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Live Dogfooding Interactive Demo Card -->
+        <div class="interactive-demo-card">
+          <div class="demo-header">
+            <div class="window-dots">
+              <span class="window-dot red"></span>
+              <span class="window-dot yellow"></span>
+              <span class="window-dot green"></span>
+            </div>
+            <div class="demo-title-tab">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+              <span>counter.component.html</span>
+            </div>
+            <div class="demo-badge-live">
+              <span class="live-dot"></span>
+              <span>Live Reactive</span>
+            </div>
+          </div>
+          <div class="demo-body">
+            <div class="demo-code">
+              <pre><code><span class="code-keyword">&lt;script</span> <span class="code-attr">src=</span><span class="code-val">"https://esm.sh/@kitelet/core"</span><span class="code-keyword">&gt;&lt;/script&gt;</span>
+
+<span class="code-keyword">&lt;div</span> <span class="code-attr">kite-scope=</span><span class="code-val">"{ count: 0 }"</span><span class="code-keyword">&gt;</span>
+  <span class="code-keyword">&lt;button</span> <span class="code-attr">kite-on-click=</span><span class="code-val">"count--"</span><span class="code-keyword">&gt;</span>−<span class="code-keyword">&lt;/button&gt;</span>
+  <span class="code-keyword">&lt;span</span> <span class="code-attr">kite-text=</span><span class="code-val">"count"</span><span class="code-keyword">&gt;&lt;/span&gt;</span>
+  <span class="code-keyword">&lt;button</span> <span class="code-attr">kite-on-click=</span><span class="code-val">"count++"</span><span class="code-keyword">&gt;</span>+<span class="code-keyword">&lt;/button&gt;</span>
+<span class="code-keyword">&lt;/div&gt;</span></code></pre>
+            </div>
+
+            <!-- Live Interactive Widget using Kite inline scope -->
+            <div class="demo-live" kite-scope="{ count: 0 }">
+              <div class="demo-live-panel">
+                <div class="demo-live-label">
+                  <span class="label-dot"></span>
+                  <span>Interactive Component</span>
+                </div>
+                <div class="live-counter-box">
+                  <button class="counter-btn" kite-on-click="count--" title="Decrement" aria-label="Decrement">−</button>
+                  <div class="counter-num" kite-text="count">0</div>
+                  <button class="counter-btn" kite-on-click="count++" title="Increment" aria-label="Increment">+</button>
+                </div>
+                <div class="demo-live-caption">
+                  Zero JS required. Reactive DOM updates via native Proxies.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6 Architectural Pillars -->
+        <div class="section-title-box">
+          <h2 class="section-title">Engineered with Purpose</h2>
+          <p class="section-subtitle">
+            Kite is not another bloated framework. It is a focused teaching
+            toolkit built on six inviolable foundations.
+          </p>
+        </div>
+
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">⚡</div>
+            <h3 class="feature-heading">Zero Boilerplate</h3>
+            <p class="feature-desc">
+              Drop one &lt;script&gt; tag into any HTML page. No build pipeline,
+              no bundlers, no npm install required to begin.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">🧩</div>
+            <h3 class="feature-heading">Local-First Components</h3>
+            <p class="feature-desc">
+              Declare templates with &lt;kite-component&gt; and instantiate them
+              with &lt;kite-use&gt;. Isolated props and slot content projection.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">🏛️</div>
+            <h3 class="feature-heading">Visible MVCR in HTML</h3>
+            <p class="feature-desc">
+              Models, Views, Controllers, and Routes are expressed as native
+              HTML tags, not hidden behind opaque JavaScript runtime
+              abstractions.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">🔒</div>
+            <h3 class="feature-heading">100% CSP Compliant</h3>
+            <p class="feature-desc">
+              Zero eval() and zero new Function(). Custom recursive-descent
+              expression parser operates safely under strict enterprise Content
+              Security Policies.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">🤖</div>
+            <h3 class="feature-heading">Agentic-Ready Toolkit</h3>
+            <p class="feature-desc">
+              Complete machine-readable layer (.kite/*.json, Draft-07 schemas,
+              AGENTS.md) that lets AI agents write verified code on first
+              contact.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">⚖️</div>
+            <h3 class="feature-heading">Honest Scale Limits</h3>
+            <p class="feature-desc">
+              Explicitly documented sweet spots (&lt;500 interactive nodes).
+              When you outgrow Kite, dedicated graduation guides help you
+              migrate cleanly.
+            </p>
+          </div>
+        </div>
+
+        <!-- Landing Page Footer (Multi-Column Layout) -->
+        <footer class="landing-footer">
+          <div class="footer-grid">
+            <div class="footer-col brand-col">
+              <div class="footer-brand">
+                <img
+                  src="assets/kite.svg"
+                  alt="Kite"
+                  class="footer-logo"
+                />
+              </div>
+              <p class="footer-brand-desc">
+                A teaching toolkit for small, self-contained web apps. HTML-only
+                interactivity with reactive state and declarative components.
+              </p>
+              <div class="footer-cdn-badge">
+                <code
+                  >&lt;script
+                  src="https://esm.sh/@kitelet/core"&gt;&lt;/script&gt;</code
+                >
+              </div>
+            </div>
+
+            <div class="footer-col">
+              <h4 class="footer-heading">Curriculum</h4>
+              <ul class="footer-links">
+                <li>
+                  <a
+                    href="#/1-basics/getting-started.md"
+                    kite-on-click="loadDoc('1-basics/getting-started.md')"
+                    >Getting Started</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="#/1-basics/cheatsheet.md"
+                    kite-on-click="loadDoc('1-basics/cheatsheet.md')"
+                    >Syntax Cheat Sheet</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="#/1-basics/directives.md"
+                    kite-on-click="loadDoc('1-basics/directives.md')"
+                    >Directives Reference</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="#/2-architecture/mvcr.md"
+                    kite-on-click="loadDoc('2-architecture/mvcr.md')"
+                    >MVCR Architecture</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="#/1-basics/limits.md"
+                    kite-on-click="loadDoc('1-basics/limits.md')"
+                    >Limits &amp; Sweet Spots</a
+                  >
+                </li>
+              </ul>
+            </div>
+
+            <div class="footer-col">
+              <h4 class="footer-heading">Resources</h4>
+              <ul class="footer-links">
+                <li>
+                  <a
+                    href="#/4-guides/cookbook.md"
+                    kite-on-click="loadDoc('4-guides/cookbook.md')"
+                    >Cookbook &amp; Recipes</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="#/4-guides/crud.md"
+                    kite-on-click="loadDoc('4-guides/crud.md')"
+                    >Full CRUD Guide</a
+                  >
+                </li>
+                <li>
+                  <a href="../examples/index.html">Live Examples Gallery</a>
+                </li>
+                <li>
+                  <a
+                    href="#/4-guides/attributions.md"
+                    kite-on-click="loadDoc('4-guides/attributions.md')"
+                    >Attributions &amp; Copyrights</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="https://github.com/eldrex/kite"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >GitHub Repository</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="footer-sub">
+            <p>
+              Released under the MIT License • Copyright &copy; 2026 Kite
+              Contributors.
+            </p>
+            <p>
+              Canonical Domain:
+              <a href="https://getkite.netlify.app">getkite.netlify.app</a>
+            </p>
+          </div>
+        </footer>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════════════════ -->
+      <!-- VIEW B: DOCUMENTATION READER APP                                       -->
+      <!-- ═══════════════════════════════════════════════════════════════════════ -->
+      <div class="doc-layout" kite-show="mode === 'docs'" style="display: none">
+        <!-- Mobile Sidebar Backdrop Overlay -->
+        <div
+          class="sidebar-backdrop"
+          kite-show="sidebarOpen"
+          kite-on-click="sidebarOpen = false"
+          style="display: none"
+        ></div>
+
+        <!-- Left Sidebar Navigation -->
+        <aside class="doc-sidebar" kite-class:open="sidebarOpen">
+          <!-- Mobile Search Input -->
+          <div class="sidebar-mobile-search">
+            <input
+              type="search"
+              class="search-input"
+              placeholder="Search guides..."
+              kite-model="searchQuery"
+            />
+          </div>
+
+          <!-- Overview -->
+          <div class="sidebar-group">
+            <div
+              class="sidebar-link"
+              kite-class:active="currentPath === 'README.md'"
+              kite-on-click="loadDoc('README.md')"
+            >
+              <span class="link-icon">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                  <path
+                    d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"
+                  ></path>
+                </svg>
+              </span>
+              <span>Documentation Overview</span>
+            </div>
+          </div>
+
+          <!-- Tier 1: Basics -->
+          <div class="sidebar-group">
+            <div class="group-title">
+              <span>Tier 1: Basics</span><span class="group-badge">7</span>
+            </div>
+            <div
+              class="sidebar-link"
+              kite-class:active="currentPath === '1-basics/getting-started.md'"
+              kite-on-click="loadDoc('1-basics/getting-started.md')"
+            >
+              <span class="link-icon">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polygon
+                    points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"
+                  ></polygon>
+                </svg>
+              </span>
+              <span>Getting Started</span>
+            </div>
+            <div
+              class="sidebar-link"
+              kite-class:active="currentPath === '1-basics/cheatsheet.md'"
+              kite-on-click="loadDoc('1-basics/cheatsheet.md')"
+            >
+              <span class="link-icon">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="16 18 22 12 16 6"></polyline>
+                  <polyline points="8 6 2 12 8 18"></polyline>
+                </svg>
+              </span>
+              <span>Syntax Cheat Sheet</span>
+            </div>
+            <div
+              class="sidebar-link"
+              kite-class:active="currentPath === '1-basics/directives.md'"
+              kite-on-click="loadDoc('1-basics/directives.md')"
+            >
+              <span class="link-icon">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"
+                  ></path>
+                  <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                </svg>
+              </span>
+              <span>Directives Reference</span>
+            </div>
+            <div
+              class="sidebar-link"
+              kite-class:active="currentPath === '1-basics/forms.md'"
+              kite-on-click="loadDoc('1-basics/forms.md')"
+            >
+              <span class="link-icon">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="9 11 12 14 22 4"></polyline>
+                  <path
+                    d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"
+                  ></path>
+                </svg>
+              </span>
+              <span>Forms &amp; Two-Way Binding</span>
+            </div>
+            <div
+              class="sidebar-link"
+              kite-class:active="currentPath === '1-basics/styling.md'"
+              kite-on-click="loadDoc('1-basics/styling.md')"
+            >
+              <span class="link-icon">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path
+                    d="M12 2a10 10 0 0 1 10 10c0 2.5-1.5 3.5-3.5 3.5h-1a2.5 2.5 0 0 0-2.5 2.5c0 1.5-1 2-3 2"
+                  ></path>
+                </svg>
+              </span>
+              <span>Styling &amp; Cloaking</span>
+            </div>
+            <div
+              class="sidebar-link"
+              kite-class:active="currentPath === '1-basics/markup.md'"
+              kite-on-click="loadDoc('1-basics/markup.md')"
+            >
+              <span class="link-icon">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="3" y1="9" x2="21" y2="9"></line>
+                  <line x1="9" y1="21" x2="9" y2="9"></line>
+                </svg>
+              </span>
+              <span>Markup Convention</span>
+            </div>
+            <div
+              class="sidebar-link"
+              kite-class:active="currentPath === '1-basics/limits.md'"
+              kite-on-click="loadDoc('1-basics/limits.md')"
+            >
+              <span class="link-icon">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <line x1="4" y1="21" x2="4" y2="14"></line>
+                  <line x1="4" y1="10" x2="4" y2="3"></line>
+                  <line x1="12" y1="21" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12" y2="3"></line>
+                  <line x1="20" y1="21" x2="20" y2="16"></line>
+                  <line x1="20" y1="12" x2="20" y2="3"></line>
+                </svg>
+              </span>
+              <span>Limits &amp; Sweet Spots</span>
+            </div>
+          </div>
+
+          <!-- Tier 2: Architecture -->
+          <div class="sidebar-group">
+            <div class="group-title">
+              <span>Tier 2: Architecture</span
+              ><span class="group-badge">5</span>
+            </div>
+            <div
+              class="sidebar-link"
+              kite-class:active="currentPath === '2-architecture/components.md'"
+              kite-on-click="loadDoc('2-architecture/components.md')"
+            >
+              <span class="link-icon">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
+                  ></path>
+                </svg>
+              </span>
+              <span>Declarative Components</span>
+            </div>
+            <div
+              class="sidebar-link"
+              kite-class:active="currentPath === '2-architecture/mvcr.md'"
+              kite-on-click="loadDoc('2-architecture/mvcr.md')"
+            >
+              <span class="link-icon">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                  <line x1="8" y1="21" x2="16" y2="21"></line>
+                  <line x1="12" y1="17" x2="12" y2="21"></line>
+                </svg>
+              </span>
+              <span>MVCR Architecture</span>
+            </div>
+            <div
+              class="sidebar-link"
+              kite-class:active="currentPath === '2-architecture/routing.md'"
+              kite-on-click="loadDoc('2-architecture/routing.md')"
+            >
+              <span class="link-icon">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                </svg>
+              </span>
+              <span>Declarative Routing</span>
+            </div>
+            <div
+              class="sidebar-link"
+              kite-class:active="currentPath === '2-architecture/scope.md'"
+              kite-on-click="loadDoc('2-architecture/scope.md')"
+            >
+              <span class="link-icon">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polygon
+                    points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"
+                  ></polygon>
+                </svg>
+              </span>
+              <span>Scope &amp; Reactivity</span>
+            </div>
+            <div
+              class="sidebar-link"
+              kite-class:active="currentPath === '2-architecture/reusable-components.md'"
+              kite-on-click="loadDoc('2-architecture/reusable-components.md')"
+            >
+              <span class="link-icon">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                  <polyline points="2 17 12 22 22 17"></polyline>
+                  <polyline points="2 12 12 17 22 12"></polyline>
+                </svg>
+              </span>
+              <span>Full-Stack Reusability</span>
+            </div>
+          </div>
+
+          <!-- Tier 3: Internals -->
+          <div class="sidebar-group">
+            <div class="group-title">
+              <span>Tier 3: Toolkit Internals</span
+              ><span class="group-badge">7</span>
+            </div>
+            <div
+              class="sidebar-link"
+              kite-class:active="currentPath === '3-internals/api.md'"
+              kite-on-click="loadDoc('3-internals/api.md')"
+            >
+              <span class="link-icon">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                  ></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                </svg>
+              </span>
+              <span>JavaScript API Reference</span>
+            </div>
+            <div
+              class="sidebar-link"
+              kite-class:active="currentPath === '3-internals/expressions.md'"
+              kite-on-click="loadDoc('3-internals/expressions.md')"
+            >
+              <span class="link-icon">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+              </span>
+              <span>Safe Expressions</span>
+            </div>
+            <div
+              class="sidebar-link"
+              kite-class:active="currentPath === '3-internals/security.md'"
+              kite-on-click="loadDoc('3-internals/security.md')"
+            >
+              <span class="link-icon">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect
+                    x="3"
+                    y="11"
+                    width="18"
+                    height="11"
+                    rx="2"
+                    ry="2"
+                  ></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+              </span>
+              <span>Keeping Your Apps Safe</span>
+            </div>
+            <div
+              class="sidebar-link"
+              kite-class:active="currentPath === '3-internals/extending.md'"
+              kite-on-click="loadDoc('3-internals/extending.md')"
+            >
+              <span class="link-icon">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M12 2v6"></path>
+                  <path d="M12 18v4"></path>
+                  <path d="M4.93 4.93l4.24 4.24"></path>
+                  <path d="M14.83 14.83l4.24 4.24"></path>
+                  <line x1="2" y1="12" x2="8" y2="12"></line>
+                  <line x1="18" y1="12" x2="24" y2="12"></line>
+                </svg>
+              </span>
+              <span>Extending Kite</span>
+            </div>
+            <div
+              class="sidebar-link"
+              kite-class:active="currentPath === '3-internals/cli.md'"
+              kite-on-click="loadDoc('3-internals/cli.md')"
+            >
+              <span class="link-icon">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="4 17 10 11 4 5"></polyline>
+                  <line x1="12" y1="19" x2="20" y2="19"></line>
+                </svg>
+              </span>
+              <span>CLI &amp; Scaffolding</span>
+            </div>
+            <div
+              class="sidebar-link"
+              kite-class:active="currentPath === '3-internals/agentic.md'"
+              kite-on-click="loadDoc('3-internals/agentic.md')"
+            >
+              <span class="link-icon">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+                  <circle cx="9" cy="9" r="1.5"></circle>
+                  <circle cx="15" cy="9" r="1.5"></circle>
+                  <line x1="9" y1="15" x2="15" y2="15"></line>
+                </svg>
+              </span>
+              <span>Agentic-Ready Toolkit</span>
+            </div>
+            <div
+              class="sidebar-link"
+              kite-class:active="currentPath === '3-internals/testing.md'"
+              kite-on-click="loadDoc('3-internals/testing.md')"
+            >
+              <span class="link-icon">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+              </span>
+              <span>Testing &amp; Debugging</span>
+            </div>
+          </div>
+
+          <!-- Tier 4: Guides & Solutions -->
+          <div class="sidebar-group">
+            <div class="group-title">
+              <span>Tier 4: Guides &amp; Solutions</span
+              ><span class="group-badge">8</span>
+            </div>
+            <div
+              class="sidebar-link"
+              kite-class:active="currentPath === '4-guides/cookbook.md'"
+              kite-on-click="loadDoc('4-guides/cookbook.md')"
+            >
+              <span class="link-icon">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <line x1="8" y1="6" x2="21" y2="6"></line>
+                  <line x1="8" y1="12" x2="21" y2="12"></line>
+                  <line x1="8" y1="18" x2="21" y2="18"></line>
+                  <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                  <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                  <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                </svg>
+              </span>
+              <span>Cookbook &amp; Recipes</span>
+            </div>
+            <div
+              class="sidebar-link"
+              kite-class:active="currentPath === '4-guides/crud.md'"
+              kite-on-click="loadDoc('4-guides/crud.md')"
+            >
+              <span class="link-icon">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                  <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                  <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                </svg>
+              </span>
+              <span>Full CRUD Guide</span>
+            </div>
+            <div
+              class="sidebar-link"
+              kite-class:active="currentPath === '4-guides/backend-integrations.md'"
+              kite-on-click="loadDoc('4-guides/backend-integrations.md')"
+            >
+              <span class="link-icon">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="2" y1="12" x2="22" y2="12"></line>
+                  <path
+                    d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+                  ></path>
+                </svg>
+              </span>
+              <span>Backend Integrations</span>
+            </div>
+            <div
+              class="sidebar-link"
+              kite-class:active="currentPath === '4-guides/laravel.md'"
+              kite-on-click="loadDoc('4-guides/laravel.md')"
+            >
+              <span class="link-icon">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+                  <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+                  <line x1="6" y1="6" x2="6.01" y2="6"></line>
+                  <line x1="6" y1="18" x2="6.01" y2="18"></line>
+                </svg>
+              </span>
+              <span>Kite + Laravel</span>
+            </div>
+            <div
+              class="sidebar-link"
+              kite-class:active="currentPath === '4-guides/graduating.md'"
+              kite-on-click="loadDoc('4-guides/graduating.md')"
+            >
+              <span class="link-icon">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <line x1="7" y1="17" x2="17" y2="7"></line>
+                  <polyline points="7 7 17 7 17 17"></polyline>
+                </svg>
+              </span>
+              <span>Graduating from Kite</span>
+            </div>
+            <div
+              class="sidebar-link"
+              kite-class:active="currentPath === '4-guides/migrations.md'"
+              kite-on-click="loadDoc('4-guides/migrations.md')"
+            >
+              <span class="link-icon">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="1 4 1 10 7 10"></polyline>
+                  <polyline points="23 20 23 14 17 14"></polyline>
+                  <path
+                    d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"
+                  ></path>
+                </svg>
+              </span>
+              <span>Migrating into Kite</span>
+            </div>
+            <div
+              class="sidebar-link"
+              kite-class:active="currentPath === '4-guides/stability.md'"
+              kite-on-click="loadDoc('4-guides/stability.md')"
+            >
+              <span class="link-icon">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="4"></circle>
+                  <line x1="1.05" y1="12" x2="7" y2="12"></line>
+                  <line x1="17.01" y1="12" x2="22.96" y2="12"></line>
+                </svg>
+              </span>
+              <span>Stability &amp; Versioning</span>
+            </div>
+            <div
+              class="sidebar-link"
+              kite-class:active="currentPath === '4-guides/faq.md'"
+              kite-on-click="loadDoc('4-guides/faq.md')"
+            >
+              <span class="link-icon">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+              </span>
+              <span>FAQ &amp; Trade-offs</span>
+            </div>
+            <div
+              class="sidebar-link"
+              kite-class:active="currentPath === '4-guides/attributions.md'"
+              kite-on-click="loadDoc('4-guides/attributions.md')"
+            >
+              <span class="link-icon">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                  ></path>
+                </svg>
+              </span>
+              <span>Attributions &amp; Copyrights</span>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Main Document Reader Area -->
+        <main class="doc-main">
+          <!-- Breadcrumb Tracker -->
+          <nav class="doc-breadcrumbs">
+            <span kite-on-click="navigateHome()" style="cursor: pointer"
+              >Home</span
+            >
+            <span style="opacity: 0.5">/</span>
+            <span kite-text="currentDoc ? currentDoc.tierName : 'Overview'"
+              >Overview</span
+            >
+            <span style="opacity: 0.5">/</span>
+            <span
+              kite-text="currentTitle"
+              style="color: var(--text-main); font-weight: 600"
+              >Getting Started</span
+            >
+          </nav>
+
+          <!-- Loading Skeleton -->
+          <div class="doc-skeleton" kite-show="loading" style="display: none">
+            <div
+              style="
+                height: 38px;
+                background: var(--bg-surface);
+                border-radius: 8px;
+                width: 60%;
+                margin-bottom: 20px;
+              "
+            ></div>
+            <div
+              style="
+                height: 16px;
+                background: var(--bg-surface);
+                border-radius: 4px;
+                width: 95%;
+                margin-bottom: 12px;
+              "
+            ></div>
+            <div
+              style="
+                height: 16px;
+                background: var(--bg-surface);
+                border-radius: 4px;
+                width: 80%;
+                margin-bottom: 24px;
+              "
+            ></div>
+            <div
+              style="
+                height: 160px;
+                background: var(--bg-surface);
+                border-radius: 8px;
+                width: 100%;
+              "
+            ></div>
+          </div>
+
+          <!-- Rendered Markdown Body -->
+          <article class="doc-content" kite-html.trusted="renderedHtml"></article>
+
+          <!-- Prev / Next Pagination Cards -->
+          <div class="doc-pagination">
+            <div
+              class="pagination-card prev"
+              kite-show="prevDoc !== null"
+              kite-on-click="prevDoc && loadDoc(prevDoc.path)"
+            >
+              <div class="pagination-label-row">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <line x1="19" y1="12" x2="5" y2="12"></line>
+                  <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                <span class="pagination-label">Previous Guide</span>
+              </div>
+              <span
+                class="pagination-title"
+                kite-text="prevDoc ? prevDoc.title : ''"
+              ></span>
+            </div>
+
+            <div
+              class="pagination-card next"
+              kite-show="nextDoc !== null"
+              kite-on-click="nextDoc && loadDoc(nextDoc.path)"
+            >
+              <div class="pagination-label-row">
+                <span class="pagination-label">Next Guide</span>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </div>
+              <span
+                class="pagination-title"
+                kite-text="nextDoc ? nextDoc.title : ''"
+              ></span>
+            </div>
+          </div>
+        </main>
+
+        <!-- Right Rail (Table of Contents) -->
+        <aside class="doc-toc" kite-show="headings.length > 0">
+          <div class="toc-title">On This Page</div>
+          <ul class="toc-list">
+            <li
+              kite-for="h in headings"
+              class="toc-item"
+              kite-class:h3="h.level === 3"
+            >
+              <a
+                class="toc-link"
+                kite-bind:href="'#' + h.id"
+                kite-on-click.prevent="scrollToHeading(h.id)"
+                kite-text="h.text"
+              ></a>
+            </li>
+          </ul>
+        </aside>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- CLIENT CONTROLLER SCRIPT (Kite MVCR Controller)                           -->
+    <!-- ========================================================================= -->
+    <script>
+      (function () {
+        // 28 Curriculum Documents
+        const DOCS = [
+          {
+            path: "README.md",
+            title: "Documentation Overview",
+            icon: "book",
+            tier: 0,
+            tierName: "Overview",
+          },
+
+          // Tier 1: Basics
+          {
+            path: "1-basics/getting-started.md",
+            title: "Getting Started",
+            icon: "compass",
+            tier: 1,
+            tierName: "Basics",
+          },
+          {
+            path: "1-basics/cheatsheet.md",
+            title: "Syntax Cheat Sheet",
+            icon: "code",
+            tier: 1,
+            tierName: "Basics",
+          },
+          {
+            path: "1-basics/directives.md",
+            title: "Directives Reference",
+            icon: "tag",
+            tier: 1,
+            tierName: "Basics",
+          },
+          {
+            path: "1-basics/forms.md",
+            title: "Forms & Two-Way Binding",
+            icon: "form",
+            tier: 1,
+            tierName: "Basics",
+          },
+          {
+            path: "1-basics/styling.md",
+            title: "Styling, Cloaking & Transitions",
+            icon: "palette",
+            tier: 1,
+            tierName: "Basics",
+          },
+          {
+            path: "1-basics/markup.md",
+            title: "Markup Convention",
+            icon: "layout",
+            tier: 1,
+            tierName: "Basics",
+          },
+          {
+            path: "1-basics/limits.md",
+            title: "Limits & Sweet Spots",
+            icon: "gauge",
+            tier: 1,
+            tierName: "Basics",
+          },
+
+          // Tier 2: Architecture
+          {
+            path: "2-architecture/components.md",
+            title: "Declarative Components",
+            icon: "box",
+            tier: 2,
+            tierName: "Architecture",
+          },
+          {
+            path: "2-architecture/mvcr.md",
+            title: "MVCR Architecture",
+            icon: "columns",
+            tier: 2,
+            tierName: "Architecture",
+          },
+          {
+            path: "2-architecture/routing.md",
+            title: "Declarative Routing",
+            icon: "map",
+            tier: 2,
+            tierName: "Architecture",
+          },
+          {
+            path: "2-architecture/scope.md",
+            title: "Scope & Reactivity Model",
+            icon: "zap",
+            tier: 2,
+            tierName: "Architecture",
+          },
+          {
+            path: "2-architecture/reusable-components.md",
+            title: "Full-Stack Reusability",
+            icon: "layers",
+            tier: 2,
+            tierName: "Architecture",
+          },
+
+          // Tier 3: Internals
+          {
+            path: "3-internals/api.md",
+            title: "JavaScript API Reference",
+            icon: "file-code",
+            tier: 3,
+            tierName: "Internals",
+          },
+          {
+            path: "3-internals/expressions.md",
+            title: "Safe Expressions & Grammar",
+            icon: "shield",
+            tier: 3,
+            tierName: "Internals",
+          },
+          {
+            path: "3-internals/security.md",
+            title: "Keeping Your Apps Safe",
+            icon: "lock",
+            tier: 3,
+            tierName: "Internals",
+          },
+          {
+            path: "3-internals/extending.md",
+            title: "Extending Kite",
+            icon: "plug",
+            tier: 3,
+            tierName: "Internals",
+          },
+          {
+            path: "3-internals/cli.md",
+            title: "CLI & Project Scaffolding",
+            icon: "terminal",
+            tier: 3,
+            tierName: "Internals",
+          },
+          {
+            path: "3-internals/agentic.md",
+            title: "Agentic-Ready Toolkit",
+            icon: "cpu",
+            tier: 3,
+            tierName: "Internals",
+          },
+          {
+            path: "3-internals/testing.md",
+            title: "Testing & Debugging Guide",
+            icon: "check-circle",
+            tier: 3,
+            tierName: "Internals",
+          },
+
+          // Tier 4: Guides
+          {
+            path: "4-guides/cookbook.md",
+            title: "Cookbook & Recipes",
+            icon: "bookmark",
+            tier: 4,
+            tierName: "Guides",
+          },
+          {
+            path: "4-guides/crud.md",
+            title: "Full CRUD Guide",
+            icon: "database",
+            tier: 4,
+            tierName: "Guides",
+          },
+          {
+            path: "4-guides/backend-integrations.md",
+            title: "Backend Integrations",
+            icon: "globe",
+            tier: 4,
+            tierName: "Guides",
+          },
+          {
+            path: "4-guides/laravel.md",
+            title: "Kite + Laravel",
+            icon: "server",
+            tier: 4,
+            tierName: "Guides",
+          },
+          {
+            path: "4-guides/graduating.md",
+            title: "Graduating from Kite",
+            icon: "award",
+            tier: 4,
+            tierName: "Guides",
+          },
+          {
+            path: "4-guides/migrations.md",
+            title: "Migrating into Kite",
+            icon: "refresh",
+            tier: 4,
+            tierName: "Guides",
+          },
+          {
+            path: "4-guides/stability.md",
+            title: "Stability & Versioning",
+            icon: "git-commit",
+            tier: 4,
+            tierName: "Guides",
+          },
+          {
+            path: "4-guides/faq.md",
+            title: "FAQ & Trade-offs",
+            icon: "help-circle",
+            tier: 4,
+            tierName: "Guides",
+          },
+          {
+            path: "4-guides/attributions.md",
+            title: "Attributions & Copyrights",
+            icon: "heart",
+            tier: 4,
+            tierName: "Guides",
+          },
+        ];
+
+        function escapeHtmlText(str) {
+          return (str || "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+        }
+
+        // Single-pass HTML & Blade Lexer: zero self-corruption, full Blade & Kite directive coloring
+        function highlightMarkupAndBlade(code) {
+          if (!code) return "";
+          const pattern = new RegExp(
+            [
+              "(\\{\\{--[\\s\\S]*?--\\}\\})",
+              "(\\x3c!--[\\s\\S]*?--\\x3e)",
+              "(@[a-zA-Z0-9_]+(?:\\([^)]*\\))?)",
+              "(\\{!![\\s\\S]*?!!\\}|\\{\\{[\\s\\S]*?\\}\\})",
+              "(\\x3c\\?(?:php|=)?[\\s\\S]*?\\?\\x3e)",
+              "(\\x3c\\/?[a-zA-Z0-9_-]+[\\s\\S]*?\\x3e)"
+            ].join("|"),
+            "g"
+          );
+
+          return code.replace(pattern, (match, bComment, hComment, directive, bEcho, phpBlock, tag) => {
+            if (bComment) return `<span class="token comment">${escapeHtmlText(bComment)}</span>`;
+            if (hComment) return `<span class="token comment">${escapeHtmlText(hComment)}</span>`;
+            if (directive) return `<span class="token keyword">${escapeHtmlText(directive)}</span>`;
+            if (bEcho) return `<span class="token variable">${escapeHtmlText(bEcho)}</span>`;
+            if (phpBlock) return `<span class="token keyword">${escapeHtmlText(phpBlock)}</span>`;
+            if (tag) {
+              const tagDeconstruct = new RegExp("^(\\x3c\\/?)([a-zA-Z0-9_-]+)([\\s\\S]*?)(\\/?\\x3e)$");
+              return tag.replace(tagDeconstruct, (m, open, tagName, attrs, close) => {
+                let formattedAttrs = '';
+                if (attrs) {
+                  const attrPattern = new RegExp(
+                    [
+                      "(@[a-zA-Z0-9_]+(?:\\([^)]*\\))?)",
+                      "(\\{\\{[^}]+\\}\\})",
+                      "(\\bkite-[a-zA-Z0-9_:-]+)(?:(=)(\"[^\"]*\"|'[^']*'|[^\\s>]+))?",
+                      "(\\b[a-zA-Z0-9_-]+)(?:(=)(\"[^\"]*\"|'[^']*'|[^\\s>]+))?"
+                    ].join("|"),
+                    "g"
+                  );
+                  formattedAttrs = attrs.replace(attrPattern, (am, bDir, bEc, kiteName, kiteEq, kiteVal, regName, regEq, regVal) => {
+                    if (bDir) return `<span class="token keyword">${escapeHtmlText(bDir)}</span>`;
+                    if (bEc) return `<span class="token variable">${escapeHtmlText(bEc)}</span>`;
+                    if (kiteName) {
+                      let res = `<span class="token attr-name kite-directive">${escapeHtmlText(kiteName)}</span>`;
+                      if (kiteEq && kiteVal) {
+                        res += `${kiteEq}<span class="token attr-value">${escapeHtmlText(kiteVal)}</span>`;
+                      }
+                      return res;
+                    }
+                    if (regName) {
+                      let res = `<span class="token attr-name">${escapeHtmlText(regName)}</span>`;
+                      if (regEq && regVal) {
+                        res += `${regEq}<span class="token attr-value">${escapeHtmlText(regVal)}</span>`;
+                      }
+                      return res;
+                    }
+                    return escapeHtmlText(am);
+                  });
+                }
+                return `${escapeHtmlText(open)}<span class="token tag">${escapeHtmlText(tagName)}</span>${formattedAttrs}${escapeHtmlText(close)}`;
+              });
+            }
+            return escapeHtmlText(match);
+          });
+        }
+
+        // Single-pass PHP Lexer
+        function highlightPhp(code) {
+          if (!code) return "";
+          const pattern = /(\/\/[^\n]*|\/\*[\s\S]*?\*\/|#[^\n]*)|("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')|(\$[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)|(\b(?:Route|Controller|Model|App|View|Request|Response|class|function|public|protected|private|static|return|if|else|elseif|foreach|as|array|new|use|namespace|extends|implements|try|catch|finally|throw|echo|isset|empty|die|exit)\b)|(\b\d+(?:\.\d+)?\b)/g;
+
+          return code.replace(pattern, (match, comment, string, variable, keyword, number) => {
+            if (comment) return `<span class="token comment">${escapeHtmlText(comment)}</span>`;
+            if (string) return `<span class="token string">${escapeHtmlText(string)}</span>`;
+            if (variable) return `<span class="token variable">${escapeHtmlText(variable)}</span>`;
+            if (keyword) return `<span class="token keyword">${escapeHtmlText(keyword)}</span>`;
+            if (number) return `<span class="token number">${escapeHtmlText(number)}</span>`;
+            return escapeHtmlText(match);
+          });
+        }
+
+        // Single-pass JavaScript / JSON Lexer
+        function highlightJs(code) {
+          if (!code) return "";
+          const pattern = /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)|("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`)|(\b(?:const|let|var|function|return|if|else|for|while|switch|case|break|continue|try|catch|finally|throw|new|this|class|extends|super|import|export|from|default|async|await|typeof|instanceof|void|delete|true|false|null|undefined)\b)|(\b\d+(?:\.\d+)?\b)/g;
+
+          return code.replace(pattern, (match, comment, string, keyword, number) => {
+            if (comment) return `<span class="token comment">${escapeHtmlText(comment)}</span>`;
+            if (string) return `<span class="token string">${escapeHtmlText(string)}</span>`;
+            if (keyword) return `<span class="token keyword">${escapeHtmlText(keyword)}</span>`;
+            if (number) return `<span class="token number">${escapeHtmlText(number)}</span>`;
+            return escapeHtmlText(match);
+          });
+        }
+
+        // Single-pass Bash / Shell Lexer
+        function highlightBash(code) {
+          if (!code) return "";
+          const pattern = /(#[^\n]*)|("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')|(\b(?:npm|npx|node|kite|git|cd|mkdir|rm|curl|serve|echo|cat|sudo)\b)|(--?[a-zA-Z0-9_-]+)/g;
+
+          return code.replace(pattern, (match, comment, string, keyword, flag) => {
+            if (comment) return `<span class="token comment">${escapeHtmlText(comment)}</span>`;
+            if (string) return `<span class="token string">${escapeHtmlText(string)}</span>`;
+            if (keyword) return `<span class="token keyword">${escapeHtmlText(keyword)}</span>`;
+            if (flag) return `<span class="token attr-name">${escapeHtmlText(flag)}</span>`;
+            return escapeHtmlText(match);
+          });
+        }
+
+        // Single-pass CSS Lexer
+        function highlightCss(code) {
+          if (!code) return "";
+          const pattern = /(\/\*[\s\S]*?\*\/)|("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')|([^{]+)(\{)|([a-zA-Z0-9_-]+)(\s*:)/g;
+
+          return code.replace(pattern, (match, comment, string, selector, openBrace, prop, colon) => {
+            if (comment) return `<span class="token comment">${escapeHtmlText(comment)}</span>`;
+            if (string) return `<span class="token string">${escapeHtmlText(string)}</span>`;
+            if (selector && openBrace) return `<span class="token selector">${escapeHtmlText(selector)}</span>${openBrace}`;
+            if (prop && colon) return `<span class="token property">${escapeHtmlText(prop)}</span>${colon}`;
+            return escapeHtmlText(match);
+          });
+        }
+
+        // Robust syntax highlighter engine
+        function highlightSyntax(code, lang) {
+          lang = (lang || "").toLowerCase().trim();
+          if (lang === "js") lang = "javascript";
+          if (lang === "html" || lang === "xml") lang = "markup";
+          if (lang === "sh") lang = "bash";
+
+          // Blade templates have specialized Blade directives and HTML that our lexer highlights impeccably
+          if (lang === "blade" || (lang === "markup" && (code.includes("kite-") || code.includes("{{")))) {
+            return highlightMarkupAndBlade(code);
+          }
+
+          if (
+            typeof window !== "undefined" &&
+            window.Prism &&
+            window.Prism.languages &&
+            window.Prism.languages[lang]
+          ) {
+            try {
+              return window.Prism.highlight(
+                code,
+                window.Prism.languages[lang],
+                lang,
+              );
+            } catch (e) {}
+          }
+          return offlineHighlight(code, lang);
+        }
+
+        function offlineHighlight(code, lang) {
+          if (!code) return "";
+          if (lang === "markup" || lang === "html" || lang === "blade") {
+            return highlightMarkupAndBlade(code);
+          }
+          if (lang === "php") {
+            return highlightPhp(code);
+          }
+          if (lang === "javascript" || lang === "js" || lang === "json") {
+            return highlightJs(code);
+          }
+          if (lang === "bash" || lang === "sh") {
+            return highlightBash(code);
+          }
+          if (lang === "css") {
+            return highlightCss(code);
+          }
+          return escapeHtmlText(code);
+        }
+
+        // Zero-dependency offline Markdown Parser
+        function parseMarkdownFast(md) {
+          if (!md) return "";
+          let html = md;
+
+          // Escape raw HTML entities
+          html = html
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+
+          // Code blocks: ```lang ... ```
+          html = html.replace(
+            /```([a-zA-Z0-9_-]*)\n([\s\S]*?)```/g,
+            (match, lang, code) => {
+              return `<pre><code class="language-${lang}">${code.trim()}</code></pre>`;
+            },
+          );
+
+          // Inline code: `code`
+          html = html.replace(/`([^`]+)`/g, "<code>$1</code>");
+
+          // Headers
+          html = html.replace(/^### (.*$)/gim, "<h3>$1</h3>");
+          html = html.replace(/^## (.*$)/gim, "<h2>$1</h2>");
+          html = html.replace(/^# (.*$)/gim, "<h1>$1</h1>");
+
+          // Blockquotes
+          html = html.replace(
+            /^\> (.*$)/gim,
+            "<blockquote><p>$1</p></blockquote>",
+          );
+
+          // Bold & Italic
+          html = html.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+          html = html.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+
+          // Links: [text](url)
+          html = html.replace(
+            /\[([^\]]+)\]\(([^)]+)\)/g,
+            '<a href="$2">$1</a>',
+          );
+
+          // Tables: simple markdown table support
+          html = html.replace(
+            /\|(.+)\|\n\|[-:| ]+\|\n((?:\|.+\|\n?)+)/g,
+            (match, header, body) => {
+              const ths = header
+                .split("|")
+                .map((s) => s.trim())
+                .filter(Boolean)
+                .map((h) => `<th>${h}</th>`)
+                .join("");
+              const trs = body
+                .trim()
+                .split("\n")
+                .map((row) => {
+                  const tds = row
+                    .split("|")
+                    .map((s) => s.trim())
+                    .filter(Boolean)
+                    .map((d) => `<td>${d}</td>`)
+                    .join("");
+                  return `<tr>${tds}</tr>`;
+                })
+                .join("");
+              return `<table><thead><tr>${ths}</tr></thead><tbody>${trs}</tbody></table>`;
+            },
+          );
+
+          // Lists
+          html = html.replace(/^\- (.*$)/gim, "<li>$1</li>");
+          html = html.replace(/(<li>.*<\/li>)/gim, "<ul>$1</ul>");
+          html = html.replace(/<\/ul>\s*<ul>/g, "");
+
+          // Paragraphs
+          html = html.replace(/\n\n+/g, "</p><p>");
+          return "<p>" + html + "</p>";
+        }
+
+        // Slugify heading text consistent with commonmark / github markdown
+        function slugifyHeading(text) {
+          if (!text) return "";
+          return text
+            .toLowerCase()
+            .trim()
+            .replace(/<[^>]+>/g, "")
+            .replace(/[^\w\s-]/g, "")
+            .replace(/\s/g, "-")
+            .replace(/^-+|-+$/g, "");
+        }
+
+        // Resilient heading resolver matching IDs, slugs, and normalized aliases
+        function findTargetHeading(id) {
+          if (!id) return null;
+          const decoded = decodeURIComponent(id).trim().replace(/^#/, "");
+          if (!decoded) return null;
+
+          // 1. Direct ID match
+          let el = document.getElementById(decoded);
+          if (el) return el;
+
+          // 2. Query selector matching id, data-slug, data-slug-compact, or name attribute
+          try {
+            el = document.querySelector(
+              `[id="${CSS.escape(decoded)}"], [data-slug="${CSS.escape(decoded)}"], [data-slug-compact="${CSS.escape(decoded)}"], a[name="${CSS.escape(decoded)}"]`,
+            );
+            if (el) return el;
+          } catch (err) {}
+
+          // 3. Normalized hyphens match (e.g. collapsed -- vs -)
+          const normTarget = decoded.toLowerCase().replace(/-+/g, "-");
+          const candidates = document.querySelectorAll(
+            ".doc-content h1, .doc-content h2, .doc-content h3, .doc-content h4, .doc-content h5, .doc-content h6, .doc-content [id], .doc-content [data-slug]",
+          );
+          for (const c of candidates) {
+            if (c.id && c.id.toLowerCase().replace(/-+/g, "-") === normTarget) {
+              return c;
+            }
+            const altSlug = c.getAttribute("data-slug");
+            if (
+              altSlug &&
+              altSlug.toLowerCase().replace(/-+/g, "-") === normTarget
+            ) {
+              return c;
+            }
+            const compactSlug = c.getAttribute("data-slug-compact");
+            if (compactSlug && compactSlug === normTarget) {
+              return c;
+            }
+          }
+
+          // 4. Match heading text slug directly
+          for (const c of document.querySelectorAll(
+            ".doc-content h1, .doc-content h2, .doc-content h3, .doc-content h4",
+          )) {
+            const slug = slugifyHeading(c.textContent);
+            if (slug === decoded || slug.replace(/-+/g, "-") === normTarget) {
+              return c;
+            }
+          }
+
+          // 5. Keyword substring match in headings
+          for (const c of document.querySelectorAll(
+            ".doc-content h1, .doc-content h2, .doc-content h3, .doc-content h4",
+          )) {
+            const headingText = (c.textContent || "").toLowerCase();
+            if (
+              headingText.includes(normTarget) ||
+              headingText.includes("kite-" + normTarget)
+            ) {
+              return c;
+            }
+          }
+
+          return null;
+        }
+
+        // Process headings, alerts, code syntax coloring, copy buttons, responsive tables
+        function enhanceMarkdownOutput(html) {
+          const temp = document.createElement("div");
+          temp.innerHTML = html;
+          const headings = [];
+
+          // Extract and slugify all headings; populate right-rail TOC for H2 & H3
+          temp
+            .querySelectorAll("h1, h2, h3, h4, h5, h6")
+            .forEach((h, index) => {
+              const text = h.textContent.trim();
+              const slug = slugifyHeading(text) || "heading-" + index;
+              const compactSlug = slug.replace(/-+/g, "-");
+              if (!h.id) {
+                h.id = slug;
+              }
+              h.setAttribute("data-slug", slug);
+              h.setAttribute("data-slug-compact", compactSlug);
+
+              if (h.tagName === "H2" || h.tagName === "H3") {
+                headings.push({
+                  id: h.id,
+                  text: text,
+                  level: parseInt(h.tagName.substring(1), 10),
+                });
+              }
+            });
+
+          // Wrap tables in responsive scroll wrapper
+          temp.querySelectorAll("table").forEach((tbl) => {
+            if (!tbl.parentNode.classList.contains("table-wrapper")) {
+              const wrapper = document.createElement("div");
+              wrapper.className = "table-wrapper";
+              tbl.parentNode.insertBefore(wrapper, tbl);
+              wrapper.appendChild(tbl);
+            }
+          });
+
+          // Convert blockquote alerts with professional SVG icons (No emojis)
+          temp.querySelectorAll("blockquote").forEach((bq) => {
+            const text = bq.innerHTML;
+            if (text.includes("[!TIP]")) {
+              bq.className = "doc-alert tip";
+              const clean = text.replace(/\[!TIP\]\s*/g, "");
+              bq.innerHTML = `
+                <div class="alert-header">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg>
+                  <span>Tip</span>
+                </div>
+                ${clean}
+              `;
+            } else if (text.includes("[!NOTE]")) {
+              bq.className = "doc-alert note";
+              const clean = text.replace(/\[!NOTE\]\s*/g, "");
+              bq.innerHTML = `
+                <div class="alert-header">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                  <span>Note</span>
+                </div>
+                ${clean}
+              `;
+            } else if (text.includes("[!WARNING]")) {
+              bq.className = "doc-alert warning";
+              const clean = text.replace(/\[!WARNING\]\s*/g, "");
+              bq.innerHTML = `
+                <div class="alert-header">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                  <span>Warning</span>
+                </div>
+                ${clean}
+              `;
+            } else if (text.includes("[!IMPORTANT]")) {
+              bq.className = "doc-alert tip";
+              const clean = text.replace(/\[!IMPORTANT\]\s*/g, "");
+              bq.innerHTML = `
+                <div class="alert-header">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="12 8 13.5 12 18 12 14.5 14.5 16 19 12 16 8 19 9.5 14.5 6 12 10.5 12 12 8"></polygon></svg>
+                  <span>Important</span>
+                </div>
+                ${clean}
+              `;
+            }
+          });
+
+          // Syntax Coloring and Code Block Enhancements
+          temp.querySelectorAll("pre").forEach((pre) => {
+            const code = pre.querySelector("code");
+            if (!code) return;
+            const codeText = code.textContent;
+
+            // Extract language class e.g. language-html, language-js
+            let lang = "";
+            const cls = (code.className || "") + " " + (pre.className || "");
+            const langMatch = cls.match(/language-([a-zA-Z0-9_-]+)/);
+            if (langMatch) {
+              lang = langMatch[1].toLowerCase();
+            } else if (
+              codeText.includes("<?php") ||
+              codeText.includes("Route::") ||
+              codeText.includes("TodoController")
+            ) {
+              lang = "php";
+            } else if (
+              codeText.includes("{{--") ||
+              codeText.includes("@extends") ||
+              codeText.includes("@yield") ||
+              codeText.includes("@section") ||
+              codeText.includes("@vite")
+            ) {
+              lang = "blade";
+            } else if (
+              codeText.trim().startsWith("<") ||
+              codeText.includes("kite-")
+            ) {
+              lang = "html";
+            } else if (
+              codeText.includes("function") ||
+              codeText.includes("const ") ||
+              codeText.includes("let ")
+            ) {
+              lang = "javascript";
+            } else if (
+              codeText.startsWith("$") ||
+              codeText.startsWith("npm ") ||
+              codeText.startsWith("npx ")
+            ) {
+              lang = "bash";
+            } else {
+              lang = "text";
+            }
+
+            // Syntax color code contents
+            if (lang !== "text") {
+              code.innerHTML = highlightSyntax(codeText, lang);
+            }
+
+            // Display language name in header
+            const langLabels = {
+              html: "HTML / Kite",
+              markup: "HTML / Kite",
+              javascript: "JavaScript",
+              js: "JavaScript",
+              css: "CSS",
+              json: "JSON",
+              bash: "Terminal",
+              sh: "Terminal",
+              php: "PHP",
+              blade: "PHP / Blade",
+              text: "Code",
+            };
+            const displayLang = langLabels[lang] || lang.toUpperCase();
+
+            const wrapper = document.createElement("div");
+            wrapper.className = "code-block-wrapper";
+
+            const header = document.createElement("div");
+            header.className = "code-block-header";
+            header.innerHTML = `
+              <div class="code-lang-badge">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                <span>${displayLang}</span>
+              </div>
+              <button class="copy-btn">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                <span>Copy</span>
+              </button>
+            `;
+
+            pre.parentNode.insertBefore(wrapper, pre);
+            wrapper.appendChild(header);
+            wrapper.appendChild(pre);
+          });
+
+          // Rewrite relative markdown links and anchor links
+          temp.querySelectorAll("a").forEach((a) => {
+            const href = a.getAttribute("href");
+            if (!href) return;
+
+            // 1. External links: open safely in new tab
+            if (/^https?:\/\//i.test(href)) {
+              a.setAttribute("target", "_blank");
+              a.setAttribute("rel", "noopener noreferrer");
+              return;
+            }
+
+            // 2. In-page anchor links (e.g. #1-searchable--filterable-list)
+            if (href.startsWith("#") && !href.startsWith("#/")) {
+              const anchor = href.substring(1);
+              a.setAttribute("data-inpage-anchor", anchor);
+              return;
+            }
+
+            // 3. Relative markdown links (with or without anchor, e.g. ./directives.md, ../1-basics/directives.md#6-kite-model)
+            if (href.includes(".md")) {
+              const [filePath, subAnchor] = href.split("#");
+              const cleanPath = filePath
+                .replace(/^\.?\.?\//, "")
+                .replace(/^\.?\//, "");
+              const match = DOCS.find(
+                (d) => d.path === cleanPath || d.path.endsWith(cleanPath),
+              );
+              if (match) {
+                const targetHash =
+                  "#/" + match.path + (subAnchor ? "#" + subAnchor : "");
+                a.setAttribute("href", targetHash);
+                a.setAttribute("data-doc-path", match.path);
+                if (subAnchor) {
+                  a.setAttribute("data-doc-anchor", subAnchor);
+                }
+              }
+            }
+          });
+
+          return { html: temp.innerHTML, headings };
+        }
+
+        // Initialize App once DOM and Kite are loaded
+        document.addEventListener("DOMContentLoaded", () => {
+          // Retrieve reactive model
+          const model = Kite.model("docs");
+          if (!model) return;
+
+          // Dynamically verify bundle size from assets/kite.min.js
+          fetch("assets/kite.min.js")
+            .then((res) => {
+              const cl = res.headers.get("content-length");
+              if (cl) {
+                const bytes = parseInt(cl, 10);
+                const kb = (bytes / 1024).toFixed(1);
+                model.bundleSizeMin = `${kb} KB min`;
+                const gz = ((bytes * 0.301) / 1024).toFixed(1);
+                model.bundleSizeGzip = `~${gz} KB gzip`;
+                model.bundleSizeBytes = bytes;
+                return null;
+              }
+              return res.blob();
+            })
+            .then((blob) => {
+              if (blob) {
+                const kb = (blob.size / 1024).toFixed(1);
+                model.bundleSizeMin = `${kb} KB min`;
+                const gz = ((blob.size * 0.301) / 1024).toFixed(1);
+                model.bundleSizeGzip = `~${gz} KB gzip`;
+                model.bundleSizeBytes = blob.size;
+              }
+            })
+            .catch(() => {});
+
+          // Sync dark mode preference
+          const savedTheme = localStorage.getItem("kite_theme") || "dark";
+          model.darkMode = savedTheme === "dark";
+          document.documentElement.setAttribute("data-theme", savedTheme);
+
+          model.toggleTheme = function () {
+            this.darkMode = !this.darkMode;
+            const theme = this.darkMode ? "dark" : "light";
+            document.documentElement.setAttribute("data-theme", theme);
+            localStorage.setItem("kite_theme", theme);
+          };
+
+          model.toggleSidebar = function () {
+            this.sidebarOpen = !this.sidebarOpen;
+          };
+
+          model.navigateHome = function () {
+            this.mode = "landing";
+            this.sidebarOpen = false;
+            window.location.hash = "#/";
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          };
+
+          // Smoothly scroll to heading anchor without resetting route
+          model.scrollToHeading = function (id) {
+            if (!id) return;
+            const target = findTargetHeading(id);
+            if (target) {
+              target.scrollIntoView({ behavior: "smooth", block: "start" });
+              if (window.history && window.history.pushState) {
+                const cleanId = id.replace(/^#/, "");
+                window.history.pushState(
+                  null,
+                  "",
+                  "#/" + (this.currentPath || "") + "#" + cleanId,
+                );
+              }
+            }
+          };
+
+          // Load document with optional anchor scroll
+          model.loadDoc = async function (path, anchor) {
+            if (!path) return;
+            this.mode = "docs";
+            this.sidebarOpen = false;
+            this.loading = true;
+
+            const docMeta =
+              DOCS.find((d) => d.path === path || d.path.endsWith(path)) ||
+              DOCS[0];
+            this.currentPath = docMeta.path;
+            this.currentTitle = docMeta.title;
+            this.currentDoc = docMeta;
+
+            // Pagination
+            const idx = DOCS.indexOf(docMeta);
+            this.prevDoc = idx > 0 ? DOCS[idx - 1] : null;
+            this.nextDoc = idx < DOCS.length - 1 ? DOCS[idx + 1] : null;
+
+            // Synchronize URL hash
+            const targetHash =
+              "#/" + docMeta.path + (anchor ? "#" + anchor : "");
+            if (window.location.hash !== targetHash) {
+              if (window.history && window.history.replaceState) {
+                window.history.replaceState(null, "", targetHash);
+              } else {
+                window.location.hash = targetHash;
+              }
+            }
+
+            try {
+              const res = await fetch(docMeta.path);
+              if (!res.ok) throw new Error(`HTTP ${res.status}`);
+              const markdown = await res.text();
+
+              let rawHtml = "";
+              if (
+                typeof marked !== "undefined" &&
+                typeof marked.parse === "function"
+              ) {
+                rawHtml = marked.parse(markdown);
+              } else {
+                rawHtml = parseMarkdownFast(markdown);
+              }
+
+              const { html, headings } = enhanceMarkdownOutput(rawHtml);
+              this.renderedHtml = html;
+              this.headings = headings;
+            } catch (err) {
+              this.renderedHtml = `
+              <h1>Failed to load ${docMeta.title}</h1>
+              <p>Could not fetch <code>${docMeta.path}</code> (${err.message}).</p>
+              <p>Ensure you are serving this directory via an HTTP server (e.g. <code>node bin/kite.js serve</code> or <code>npx serve docs</code>).</p>
+            `;
+              this.headings = [];
+            } finally {
+              this.loading = false;
+              if (anchor) {
+                setTimeout(() => {
+                  const target = findTargetHeading(anchor);
+                  if (target) {
+                    target.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  } else {
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }
+                }, 80);
+              } else {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }
+            }
+          };
+
+          // Client Router from Hash
+          function syncRouteFromHash() {
+            let raw = window.location.hash.replace(/^#\/?/, "").trim();
+            if (!raw || raw === "" || raw === "landing" || raw === "home") {
+              model.mode = "landing";
+              window.scrollTo({ top: 0 });
+              return;
+            }
+
+            // Split into route document and sub-anchor if present (e.g. "4-guides/cookbook.md#1-searchable--filterable-list")
+            const parts = raw.split("#");
+            const routePart = parts[0].trim();
+            const anchorPart = parts.slice(1).join("#").trim();
+
+            // Match known curriculum document
+            const match = DOCS.find(
+              (d) => d.path === routePart || d.path.endsWith(routePart),
+            );
+            if (match) {
+              if (model.mode === "docs" && model.currentPath === match.path) {
+                if (anchorPart) {
+                  model.scrollToHeading(anchorPart);
+                }
+              } else {
+                model.loadDoc(match.path, anchorPart);
+              }
+              return;
+            }
+
+            // Shortcut "docs" route
+            if (routePart === "docs") {
+              model.loadDoc("1-basics/getting-started.md", anchorPart);
+              return;
+            }
+
+            // If user is currently viewing a doc and the hash is an in-page anchor
+            if (model.mode === "docs" && model.currentPath) {
+              const target = findTargetHeading(routePart);
+              if (target) {
+                model.scrollToHeading(routePart);
+                return;
+              }
+              // Even if heading ID not found yet, stay in docs mode!
+              return;
+            }
+
+            // Default fallback to landing
+            model.mode = "landing";
+          }
+
+          window.addEventListener("hashchange", syncRouteFromHash);
+          syncRouteFromHash();
+
+          function fallbackCopyText(text, cb) {
+            const ta = document.createElement("textarea");
+            ta.value = text;
+            ta.style.position = "fixed";
+            ta.style.left = "-9999px";
+            ta.style.top = "0";
+            ta.setAttribute("readonly", "");
+            document.body.appendChild(ta);
+            ta.focus();
+            ta.select();
+            try {
+              document.execCommand("copy");
+              if (cb) cb();
+            } catch (err) {}
+            document.body.removeChild(ta);
+          }
+
+          // Delegated click handler for code block Copy buttons (works across all document re-renders)
+          document.addEventListener("click", (e) => {
+            const btn = e.target.closest(".copy-btn");
+            if (!btn) return;
+            e.preventDefault();
+
+            const wrapper = btn.closest(".code-block-wrapper");
+            const pre = wrapper ? wrapper.querySelector("pre") : null;
+            if (!pre) return;
+            const textToCopy = pre.textContent || "";
+
+            function onCopied() {
+              btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg><span>Copied!</span>`;
+              btn.classList.add("copied");
+              setTimeout(() => {
+                btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg><span>Copy</span>`;
+                btn.classList.remove("copied");
+              }, 2000);
+            }
+
+            if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+              navigator.clipboard.writeText(textToCopy).then(onCopied).catch(() => {
+                fallbackCopyText(textToCopy, onCopied);
+              });
+            } else {
+              fallbackCopyText(textToCopy, onCopied);
+            }
+          });
+
+          // Delegated click handler for all in-app markdown and TOC links
+          document.addEventListener("click", (e) => {
+            const link = e.target.closest("a");
+            if (!link) return;
+
+            // Ignore external links or target="_blank"
+            if (link.target === "_blank") return;
+
+            const href = link.getAttribute("href") || "";
+
+            // Case A: Right-rail TOC link
+            if (link.classList.contains("toc-link")) {
+              e.preventDefault();
+              const id = href.replace(/^#/, "");
+              model.scrollToHeading(id);
+              return;
+            }
+
+            // Case B: In-page anchor inside document
+            const inpageAnchor = link.getAttribute("data-inpage-anchor");
+            if (
+              inpageAnchor ||
+              (href.startsWith("#") && !href.startsWith("#/"))
+            ) {
+              e.preventDefault();
+              const targetId = inpageAnchor || href.substring(1);
+              model.scrollToHeading(targetId);
+              return;
+            }
+
+            // Case C: Markdown cross-document link with data attributes
+            const docPath = link.getAttribute("data-doc-path");
+            const docAnchor = link.getAttribute("data-doc-anchor");
+            if (docPath) {
+              e.preventDefault();
+              if (model.currentPath === docPath) {
+                if (docAnchor) {
+                  model.scrollToHeading(docAnchor);
+                } else {
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }
+              } else {
+                model.loadDoc(docPath, docAnchor);
+              }
+              return;
+            }
+
+            // Case D: Any other hash link starting with #/
+            if (href.startsWith("#/")) {
+              const pathWithoutPrefix = href.substring(2);
+              const parts = pathWithoutPrefix.split("#");
+              const targetDoc = parts[0].trim();
+              const targetAnchor = parts.slice(1).join("#").trim();
+
+              const match = DOCS.find(
+                (d) => d.path === targetDoc || d.path.endsWith(targetDoc),
+              );
+              if (match) {
+                e.preventDefault();
+                if (model.currentPath === match.path) {
+                  if (targetAnchor) {
+                    model.scrollToHeading(targetAnchor);
+                  } else {
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }
+                } else {
+                  model.loadDoc(match.path, targetAnchor);
+                }
+                return;
+              }
+            }
+          });
+
+          // Live search filter across sidebar
+          model.$subscribe("searchQuery", () => {
+            const q = (model.searchQuery || "").toLowerCase().trim();
+            document.querySelectorAll(".sidebar-link").forEach((link) => {
+              const text = link.textContent.toLowerCase();
+              if (!q || text.includes(q)) {
+                link.style.display = "flex";
+              } else {
+                link.style.display = "none";
+              }
+            });
+          });
+
+          // Quick snippet copy button in hero
+          const heroCopyBtn = document.getElementById("hero-copy-btn");
+          if (heroCopyBtn) {
+            heroCopyBtn.addEventListener("click", () => {
+              if (navigator.clipboard) {
+                navigator.clipboard
+                  .writeText("npm i @kitelet/core")
+                  .then(() => {
+                    heroCopyBtn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg><span>Copied!</span>`;
+                    heroCopyBtn.classList.add("copied");
+                    setTimeout(() => {
+                      heroCopyBtn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg><span>Copy</span>`;
+                      heroCopyBtn.classList.remove("copied");
+                    }, 2000);
+                  });
+              }
+            });
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>

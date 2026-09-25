@@ -1,0 +1,639 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🪁 Kite — Examples &amp; Showcase Gallery</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="./shared.css" />
+    <style>
+      .gallery-container {
+        width: 100%;
+        max-width: 960px;
+      }
+      .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.25rem;
+        margin-bottom: 2.5rem;
+      }
+      .gallery-card {
+        background: var(--kite-card-bg);
+        border: 1px solid var(--kite-card-border);
+        border-radius: var(--kite-radius);
+        padding: 1.25rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        text-decoration: none;
+        color: inherit;
+        transition:
+          transform 0.15s ease,
+          border-color 0.15s ease,
+          box-shadow 0.15s ease;
+      }
+      .gallery-card:hover {
+        transform: translateY(-2px);
+        border-color: var(--kite-primary);
+        box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.5);
+      }
+      .gallery-card-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin: 0 0 0.4rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .gallery-card-desc {
+        font-size: 0.85rem;
+        color: var(--kite-text-muted);
+        margin: 0 0 1rem 0;
+        line-height: 1.45;
+      }
+      .gallery-badge {
+        display: inline-block;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        padding: 0.2rem 0.5rem;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--kite-text-muted);
+        align-self: flex-start;
+      }
+      .section-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--kite-primary);
+        margin: 2rem 0 1rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+        padding-bottom: 0.5rem;
+      }
+      .banner-kit-card {
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid var(--kite-card-border);
+        border-radius: var(--kite-radius);
+        padding: 1.5rem;
+        margin-bottom: 3rem;
+      }
+      .code-box {
+        background: #0b1120;
+        border: 1px solid var(--kite-card-border);
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        font-family: monospace;
+        font-size: 0.8rem;
+        color: #38bdf8;
+        overflow-x: auto;
+        white-space: pre;
+        margin: 0.5rem 0 1rem 0;
+        user-select: all;
+      }
+      .copy-btn {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.65rem;
+        cursor: pointer;
+        border-radius: 4px;
+        background: rgba(56, 189, 248, 0.15);
+        color: var(--kite-primary);
+        border: 1px solid rgba(56, 189, 248, 0.3);
+        transition: background 0.15s ease;
+      }
+      .copy-btn:hover {
+        background: rgba(56, 189, 248, 0.3);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Topbar Navigation Bar (Consistent with Docs Portal) -->
+    <header class="doc-topbar">
+      <div style="display: flex; align-items: center">
+        <a href="../docs/index.html" class="brand-section" title="Kite Home">
+          <img
+            src="../docs/assets/kite.svg"
+            alt="Kite Logo"
+            class="brand-logo"
+          />
+        </a>
+
+        <!-- Navigation Tabs: Home vs Docs vs Examples -->
+        <nav class="nav-links">
+          <a href="../docs/index.html" class="nav-tab">Home</a>
+          <a href="../docs/index.html#/1-basics/getting-started.md" class="nav-tab">Documentation</a>
+          <a href="./index.html" class="nav-tab active">Examples</a>
+        </nav>
+      </div>
+
+      <div class="topbar-actions">
+        <!-- GitHub Repository Link -->
+        <a
+          href="https://github.com/eldrex/kite"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-icon"
+          title="View source on GitHub"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+            />
+          </svg>
+        </a>
+      </div>
+    </header>
+
+    <div class="gallery-container">
+      <div style="text-align: center; margin-bottom: 2.5rem">
+        <a
+          href="../assets/kite-banner.svg"
+          target="_blank"
+          title="View Kite Banner"
+        >
+          <img
+            src="../assets/kite-banner.svg"
+            alt="Kite Toolkit Banner"
+            style="
+              max-width: 250px;
+              margin-bottom: 1rem;
+              transition: transform 0.2s;
+            "
+            onmouseover="this.style.transform = 'scale(1.03)'"
+            onmouseout="this.style.transform = 'scale(1)'"
+          />
+        </a>
+        <h1 class="kite-title" style="font-size: 2.25rem">
+          Interactive Examples Gallery
+        </h1>
+        <p class="kite-desc" style="max-width: 620px; margin: 0 auto">
+          Explore cleanly organized examples demonstrating Kite reactivity,
+          declarative components, universal styling, and backend integrations.
+        </p>
+      </div>
+
+      <!-- Section 1: Basics -->
+      <h2 class="section-title">
+        🔰 1. Core &amp; Basics (<code>examples/basics/</code>)
+      </h2>
+      <div class="gallery-grid">
+        <a href="./basics/counter.html" class="gallery-card">
+          <div>
+            <div class="gallery-card-title"><span>⚡</span> Counter</div>
+            <div class="gallery-card-desc">
+              Zero-build, proxy-driven single-state counter in 15 lines of pure
+              HTML.
+            </div>
+          </div>
+          <span class="gallery-badge">kite-scope • kite-on-click</span>
+        </a>
+
+        <a href="./basics/todo.html" class="gallery-card">
+          <div>
+            <div class="gallery-card-title"><span>✅</span> Todo App</div>
+            <div class="gallery-card-desc">
+              Interactive task list with filters, dynamic array mutations, and
+              counters.
+            </div>
+          </div>
+          <span class="gallery-badge">kite-for • Array Proxies</span>
+        </a>
+
+        <a href="./basics/calculator.html" class="gallery-card">
+          <div>
+            <div class="gallery-card-title"><span>🧮</span> Calculator</div>
+            <div class="gallery-card-desc">
+              Safe arithmetic calculator with numeric buttons, operators, and
+              display.
+            </div>
+          </div>
+          <span class="gallery-badge">Expressions • State</span>
+        </a>
+
+        <a href="./basics/form-validation.html" class="gallery-card">
+          <div>
+            <div class="gallery-card-title">
+              <span>🛡️</span> Form Validation
+            </div>
+            <div class="gallery-card-desc">
+              Live two-way model bindings, regex validation, and dynamic error
+              feedback.
+            </div>
+          </div>
+          <span class="gallery-badge">kite-model • Validation</span>
+        </a>
+
+        <a href="./basics/full-app.html" class="gallery-card">
+          <div>
+            <div class="gallery-card-title"><span>🚀</span> Full Mini-App</div>
+            <div class="gallery-card-desc">
+              Multi-tab navigation, nested objects, conditional views, and event
+              dispatch.
+            </div>
+          </div>
+          <span class="gallery-badge">Tabs • Nested State</span>
+        </a>
+
+        <a href="./basics/crud.html" class="gallery-card">
+          <div>
+            <div class="gallery-card-title"><span>👥</span> Full CRUD App</div>
+            <div class="gallery-card-desc">
+              Complete Create, Read, Update, Delete with modal dialog, search filtering, and reactive state.
+            </div>
+          </div>
+          <span class="gallery-badge">Full CRUD • Modal</span>
+        </a>
+      </div>
+
+      <!-- Section 2: Architecture & Full-Stack -->
+      <h2 class="section-title">
+        🏛️ 2. Architecture &amp; Reusability
+        (<code>examples/architecture/</code>)
+      </h2>
+      <div class="gallery-grid">
+        <a href="./architecture/components.html" class="gallery-card">
+          <div>
+            <div class="gallery-card-title">
+              <span>🧩</span> Declarative Components
+            </div>
+            <div class="gallery-card-desc">
+              Reusable templates with props, isolated scopes, and slot
+              projection.
+            </div>
+          </div>
+          <span class="gallery-badge"
+            >&lt;kite-component&gt; • &lt;slot&gt;</span
+          >
+        </a>
+
+        <a href="./architecture/routing.html" class="gallery-card">
+          <div>
+            <div class="gallery-card-title">
+              <span>🧭</span> Declarative Routing
+            </div>
+            <div class="gallery-card-desc">
+              Zero-JS hash routing with parameterized views and active outlets.
+            </div>
+          </div>
+          <span class="gallery-badge"
+            >&lt;kite-route&gt; • &lt;kite-outlet&gt;</span
+          >
+        </a>
+
+        <a href="./architecture/reusable-mvcr-app.html" class="gallery-card">
+          <div>
+            <div class="gallery-card-title">
+              <span>🏛️</span> Complete MVCR Mini-App
+            </div>
+            <div class="gallery-card-desc">
+              Self-contained 4-layer MVCR component carrying markup, state,
+              actions, and routing.
+            </div>
+          </div>
+          <span class="gallery-badge">Level 3 MVCR Bundle</span>
+        </a>
+
+        <a href="./architecture/reusable-field.html" class="gallery-card">
+          <div>
+            <div class="gallery-card-title">
+              <span>📦</span> Reusable Form Field
+            </div>
+            <div class="gallery-card-desc">
+              Validated input component with labeling, hints, and error states.
+            </div>
+          </div>
+          <span class="gallery-badge">Level 1 Component</span>
+        </a>
+
+        <a href="./architecture/reusable-table.html" class="gallery-card">
+          <div>
+            <div class="gallery-card-title">
+              <span>📊</span> Reusable Data Table
+            </div>
+            <div class="gallery-card-desc">
+              Dynamic data table encapsulated with live search filtering and
+              columns.
+            </div>
+          </div>
+          <span class="gallery-badge">Level 2 Component</span>
+        </a>
+      </div>
+
+      <!-- Section 3: Universal Styling -->
+      <h2 class="section-title">
+        🎨 3. Universal Styling (<code>examples/styling/</code>)
+      </h2>
+      <div class="gallery-grid">
+        <a href="./styling/styling-tailwind.html" class="gallery-card">
+          <div>
+            <div class="gallery-card-title"><span>🌊</span> Tailwind CSS</div>
+            <div class="gallery-card-desc">
+              Tailwind utility classes working seamlessly with Kite reactivity.
+            </div>
+          </div>
+          <span class="gallery-badge">Utility Classes</span>
+        </a>
+
+        <a href="./styling/styling-bootstrap.html" class="gallery-card">
+          <div>
+            <div class="gallery-card-title"><span>🅱️</span> Bootstrap 5</div>
+            <div class="gallery-card-desc">
+              Bootstrap cards, buttons, badges, and alerts with zero conflicts.
+            </div>
+          </div>
+          <span class="gallery-badge">Bootstrap 5</span>
+        </a>
+
+        <a href="./styling/styling-vanilla.html" class="gallery-card">
+          <div>
+            <div class="gallery-card-title">
+              <span>🍦</span> Pure Vanilla CSS
+            </div>
+            <div class="gallery-card-desc">
+              CSS custom properties, kite-class:*, and kite-style:* bindings.
+            </div>
+          </div>
+          <span class="gallery-badge">Dynamic Classes</span>
+        </a>
+
+        <a href="./styling/styling-mixed.html" class="gallery-card">
+          <div>
+            <div class="gallery-card-title">
+              <span>🎭</span> Mixed &amp; Shadow DOM
+            </div>
+            <div class="gallery-card-desc">
+              Global stylesheet interop alongside encapsulated Shadow DOM
+              elements.
+            </div>
+          </div>
+          <span class="gallery-badge">kite-shadow • Interop</span>
+        </a>
+      </div>
+
+      <!-- Section 4: Data & Plugins -->
+      <h2 class="section-title">
+        🔌 4. APIs &amp; Extensibility (<code>examples/advanced/</code>)
+      </h2>
+      <div class="gallery-grid">
+        <a href="./advanced/api-fetch.html" class="gallery-card">
+          <div>
+            <div class="gallery-card-title">
+              <span>🌐</span> Remote API Fetch
+            </div>
+            <div class="gallery-card-desc">
+              Declarative REST API client with async request state handling.
+            </div>
+          </div>
+          <span class="gallery-badge"
+            >&lt;kite-api&gt; • &lt;kite-model&gt;</span
+          >
+        </a>
+
+        <a href="./advanced/plugin-design-system.html" class="gallery-card">
+          <div>
+            <div class="gallery-card-title">
+              <span>🎨</span> Design System Plugin
+            </div>
+            <div class="gallery-card-desc">
+              Modular plugins packaging helpers and custom ripple directives.
+            </div>
+          </div>
+          <span class="gallery-badge">Kite.plugin • Helpers</span>
+        </a>
+
+        <a href="./advanced/custom-directive.html" class="gallery-card">
+          <div>
+            <div class="gallery-card-title">
+              <span>🔌</span> Custom Directives
+            </div>
+            <div class="gallery-card-desc">
+              Extending Kite with custom DOM manipulation directives.
+            </div>
+          </div>
+          <span class="gallery-badge">Kite.directive</span>
+        </a>
+      </div>
+
+      <!-- Section 5: Laravel Ecosystem -->
+      <h2 class="section-title">
+        🔴 5. Laravel Ecosystem (<code>examples/laravel/</code>)
+      </h2>
+      <div class="gallery-grid">
+        <a href="./laravel/laravel-csrf.blade.php" class="gallery-card">
+          <div>
+            <div class="gallery-card-title"><span>🛡️</span> Laravel CSRF</div>
+            <div class="gallery-card-desc">
+              Blade CSRF token pass-through with Kite API clients.
+            </div>
+          </div>
+          <span class="gallery-badge">Blade • CSRF</span>
+        </a>
+
+        <a href="./laravel/laravel-sanctum.blade.php" class="gallery-card">
+          <div>
+            <div class="gallery-card-title">
+              <span>🔐</span> Sanctum SPA Auth
+            </div>
+            <div class="gallery-card-desc">
+              Session cookies with credentials="include" in Blade templates.
+            </div>
+          </div>
+          <span class="gallery-badge">Sanctum • Auth</span>
+        </a>
+
+        <a href="./laravel/laravel-livewire.blade.php" class="gallery-card">
+          <div>
+            <div class="gallery-card-title">
+              <span>⚡</span> Livewire Coexistence
+            </div>
+            <div class="gallery-card-desc">
+              Server-driven Livewire components alongside client-side Kite
+              state.
+            </div>
+          </div>
+          <span class="gallery-badge">Livewire • Coexistence</span>
+        </a>
+
+        <a href="./laravel/laravel-flash.blade.php" class="gallery-card">
+          <div>
+            <div class="gallery-card-title"><span>💬</span> Session Flash</div>
+            <div class="gallery-card-desc">
+              Dismissible client notifications initialized from Laravel
+              sessions.
+            </div>
+          </div>
+          <span class="gallery-badge">Sessions • Flash</span>
+        </a>
+      </div>
+
+      <!-- Section 6: Creator Banner Kit -->
+      <div class="banner-kit-card">
+        <div
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+          "
+        >
+          <div>
+            <h2
+              style="
+                margin: 0;
+                font-size: 1.35rem;
+                color: #ffffff;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+              "
+            >
+              <span>🎨</span> Creator Banner Kit
+            </h2>
+            <p
+              style="
+                margin: 0.35rem 0 0;
+                font-size: 0.85rem;
+                color: var(--kite-text-muted);
+              "
+            >
+              Building something with Kite? Proudly display the official banner
+              on your website, docs, or GitHub README.
+            </p>
+          </div>
+          <a
+            href="../assets/kite-banner.svg"
+            download="kite-banner.svg"
+            class="kite-btn kite-btn-primary"
+            style="font-size: 0.85rem"
+          >
+            🔽 Download Banner SVG
+          </a>
+        </div>
+
+        <div
+          style="
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(11, 17, 32, 0.5);
+            border-radius: 8px;
+            border: 1px dashed var(--kite-card-border);
+            margin-bottom: 1.5rem;
+          "
+        >
+          <img
+            src="../assets/kite-banner.svg"
+            alt="Official Kite Banner Preview"
+            style="max-width: 220px; height: auto"
+          />
+          <div
+            style="
+              font-size: 0.75rem;
+              color: var(--kite-text-muted);
+              margin-top: 0.5rem;
+            "
+          >
+            Preview on dark background (<code>assets/kite-banner.svg</code>)
+          </div>
+        </div>
+
+        <div
+          style="
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+          "
+        >
+          <div>
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+              "
+            >
+              <strong style="font-size: 0.85rem; color: var(--kite-text)"
+                >1. HTML Badge (Website &amp; Footer):</strong
+              >
+              <button
+                class="copy-btn"
+                onclick="
+                  navigator.clipboard.writeText(
+                    document.getElementById('code-html').innerText,
+                  );
+                  this.innerText = 'Copied! ✓';
+                  setTimeout(() => (this.innerText = 'Copy'), 1500);
+                "
+              >
+                Copy
+              </button>
+            </div>
+            <div id="code-html" class="code-box">
+              &lt;a href="https://github.com/kitelet/kite" target="_blank"
+              rel="noopener"&gt; &lt;img src="path/to/kite-banner.svg"
+              alt="Built with Kite" height="32"&gt; &lt;/a&gt;
+            </div>
+          </div>
+
+          <div>
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+              "
+            >
+              <strong style="font-size: 0.85rem; color: var(--kite-text)"
+                >2. GitHub README (Markdown):</strong
+              >
+              <button
+                class="copy-btn"
+                onclick="
+                  navigator.clipboard.writeText(
+                    document.getElementById('code-md').innerText,
+                  );
+                  this.innerText = 'Copied! ✓';
+                  setTimeout(() => (this.innerText = 'Copy'), 1500);
+                "
+              >
+                Copy
+              </button>
+            </div>
+            <div id="code-md" class="code-box">
+              [![Built with
+              Kite](https://raw.githubusercontent.com/kitelet/kite/main/assets/kite-banner.svg)](https://github.com/kitelet/kite)
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Official Banner Footer -->
+      <footer class="kite-footer" style="max-width: 960px">
+        <a
+          href="../assets/kite-banner.svg"
+          target="_blank"
+          title="View Official Kite Banner"
+        >
+          <img
+            src="../assets/kite-banner.svg"
+            alt="Kite Toolkit"
+            class="kite-footer-banner"
+          />
+        </a>
+        <div class="kite-footer-meta">
+          Kite v1.0.0 &bull; HTML is enough for small things &bull;
+          <a href="../docs/README.md">Documentation</a>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

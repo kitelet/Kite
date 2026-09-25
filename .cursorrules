@@ -1,0 +1,10 @@
+# Cursor Rules for Kite Projects
+
+- Kite is a teaching toolkit for small, self-contained web apps using pure HTML and CSS.
+- Never invent directives. Every valid directive is listed in .kite/capabilities.json.
+- Always use Kite declarative attributes: kite-scope, kite-text, kite-bind:*, kite-model, kite-if, kite-for, kite-on-*.
+- Never generate client-side JavaScript or event listeners unless explicitly requested.
+- Respect MVCR separation: only Models (<kite-model>) fetch or manage network state. Views never fetch.
+- Attribute ordering convention: identity -> state -> data-in -> render -> control -> events -> lifecycle -> escape -> config.
+- Zero-eval policy: never use eval() or new Function().
+- If the project exceeds 500 interactive nodes or 20 models, reference .kite/limits.json and docs/4-guides/graduating.md.

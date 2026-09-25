@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://getkite.netlify.app/schemas/rules-1.0.json",
+  "title": "Kite Rules Schema",
+  "type": "object",
+  "required": ["$schema", "rules"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "severity", "description", "check"],
+        "properties": {
+          "id": { "type": "string" },
+          "severity": { "type": "string", "enum": ["error", "warning", "info"] },
+          "description": { "type": "string" },
+          "check": { "type": "string" },
+          "rationale": { "type": "string" }
+        }
+      }
+    }
+  }
+}

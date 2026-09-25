@@ -1,0 +1,9 @@
+# Aider configuration for Kite toolkit
+read:
+  - AGENTS.md
+  - .kite/manifest.json
+  - .kite/capabilities.json
+  - .kite/rules.json
+  - .kite/conventions.json
+  - .kite/limits.json
+auto-commits: false

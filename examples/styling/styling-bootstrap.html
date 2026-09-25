@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🅱️ Bootstrap 5 — Kite Styling</title>
+    <link rel="stylesheet" href="../shared.css" />
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script type="module" src="../../src/kite.js"></script>
+  </head>
+  <body>
+
+    <!-- Topbar Navigation -->
+    <div class="kite-topbar">
+      <a href="../index.html" class="kite-back-link">
+        <svg class="kite-icon" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+        <span>Gallery</span>
+      </a>
+      <span class="kite-chip">🎨 Universal Styling</span>
+    </div>
+
+    <!-- Main Card Container -->
+    <div class="card shadow-lg border-secondary" style="max-width: 620px; width: 100%;"
+         kite-scope="{
+           variant: 'success',
+           alertVisible: true,
+           counter: 0,
+           toggleAlert() { this.alertVisible = !this.alertVisible; },
+           setVariant(v) { this.variant = v; }
+         }">
+      <div class="card-header border-secondary d-flex justify-content-between align-items-center">
+        <div>
+          <h5 class="mb-0 text-white">🅱️ Bootstrap 5 Integration</h5>
+          <small class="text-secondary">Component classes and state toggles cooperate natively.</small>
+        </div>
+        <span class="badge bg-primary">v5.3.3</span>
+      </div>
+
+      <div class="card-body">
+        <div class="alert"
+             kite-if="alertVisible"
+             kite-class:alert-success="variant === 'success'"
+             kite-class:alert-danger="variant === 'danger'"
+             kite-class:alert-warning="variant === 'warning'"
+             role="alert">
+          <div class="d-flex justify-content-between align-items-center">
+            <span>Dynamic Alert (current variant: <strong kite-text="variant"></strong>)</span>
+            <button type="button" class="btn-close" aria-label="Close" kite-on-click="toggleAlert()"></button>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label text-secondary">Switch Alert Variant:</label>
+          <div class="btn-group w-100" role="group">
+            <button type="button" class="btn btn-outline-success" kite-on-click="setVariant('success')">Success</button>
+            <button type="button" class="btn btn-outline-warning" kite-on-click="setVariant('warning')">Warning</button>
+            <button type="button" class="btn btn-outline-danger" kite-on-click="setVariant('danger')">Danger</button>
+          </div>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-secondary flex-grow-1" kite-on-click="toggleAlert()">
+            Toggle Alert Visibility
+          </button>
+          <button type="button" class="btn btn-primary" kite-on-click="counter++">
+            Clicks: <span class="badge text-bg-light" kite-text="counter">0</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Official Banner Footer -->
+    <footer class="kite-footer">
+      <a href="../index.html" title="Kite Examples Gallery">
+        <img src="../../assets/kite-banner.svg" alt="Kite Toolkit" class="kite-footer-banner">
+      </a>
+      <div class="kite-footer-meta">
+        HTML is enough for small things &bull; <a href="../index.html">← All Examples</a>
+      </div>
+    </footer>
+
+  </body>
+</html>

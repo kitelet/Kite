@@ -1,0 +1,15 @@
+<kite-view name="todos">
+  <div class="card" kite-scope="todos">
+    <h2>Todos</h2>
+    <div class="todo-add">
+      <input class="input" type="text" placeholder="Add a new todo..." kite-model="newTodo">
+      <button class="btn" kite-on-click="add()">Add</button>
+    </div>
+    <ul class="todo-list" kite-if="items.length > 0">
+      <kite-for each="item in items">
+        <kite-use name="todo-item" kite-bind:item="item"></kite-use>
+      </kite-for>
+    </ul>
+    <p kite-if="items.length === 0" class="empty-state">No todos yet. Add one above!</p>
+  </div>
+</kite-view>

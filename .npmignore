@@ -1,0 +1,48 @@
+# =============================================================================
+# NPM Package Ignore File (@kitelet/core)
+# Minimal, lean distribution payload
+# =============================================================================
+
+# External tooling and IDE packages (separate release cycles)
+tools/
+
+# Examples and demo sites
+examples/
+
+# Tests and fixtures
+tests/
+
+# Scratch & temporary development files
+scratch/
+tmp/
+temp/
+*.tmp
+*.temp
+.cache/
+.eslintcache
+.tempmediaStorage/
+.project-goals.json
+Skills.md
+
+# Secrets, Environment & Credentials
+.env*
+*.env
+*.pem
+*.key
+.npmrc
+
+# Git & GitHub metadata
+.git/
+.github/
+.gitignore
+.npmignore
+
+# Platform config
+netlify.toml
+.netlify/
+.vercel/
+
+# Build logs & tarballs
+*.log
+*.tgz
+*.tar.gz

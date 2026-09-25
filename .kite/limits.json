@@ -1,0 +1,35 @@
+{
+  "$schema": "./schemas/limits-1.0.json",
+  "comfortable": {
+    "interactiveNodes": 500,
+    "models": 20,
+    "routes": 20,
+    "views": 30,
+    "components": 40,
+    "teamSize": 1
+  },
+  "possible": {
+    "interactiveNodes": 2000,
+    "models": 50,
+    "routes": 50,
+    "views": 100,
+    "components": 150,
+    "teamSize": 3
+  },
+  "notSupported": [
+    "Data grids with thousands of rows",
+    "WebGL, Canvas, or complex charts",
+    "Real-time collaboration",
+    "SSR / hydration",
+    "Multi-team codebases",
+    "Mission-critical logic",
+    "Long-term maintenance over years"
+  ],
+  "graduationTriggers": [
+    "> 500 interactive nodes",
+    "> 20 models",
+    "> 3 developers",
+    "Need typed code",
+    "Need SSR"
+  ]
+}

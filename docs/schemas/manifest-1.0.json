@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://getkite.netlify.app/schemas/manifest-1.0.json",
+  "title": "Kite Manifest Schema",
+  "type": "object",
+  "required": ["$schema", "kite", "project", "structure"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "kite": { "type": "string" },
+    "project": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string" },
+        "template": { "type": "string" },
+        "description": { "type": "string" }
+      }
+    },
+    "structure": {
+      "type": "object",
+      "properties": {
+        "models": { "type": "string" },
+        "views": { "type": "string" },
+        "controllers": { "type": "string" },
+        "components": { "type": "string" },
+        "routes": { "type": "string" },
+        "api": { "type": "string" },
+        "shell": { "type": "string" },
+        "styles": { "type": "string" }
+      }
+    },
+    "counts": {
+      "type": "object",
+      "properties": {
+        "models": { "type": "integer" },
+        "views": { "type": "integer" },
+        "controllers": { "type": "integer" },
+        "components": { "type": "integer" },
+        "routes": { "type": "integer" },
+        "api": { "type": "integer" }
+      }
+    },
+    "entryPoints": {
+      "type": "object",
+      "properties": {
+        "html": { "type": "string" },
+        "runtime": { "type": "string" }
+      }
+    }
+  }
+}

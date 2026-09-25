@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🛡️ Form Validation — Kite Example</title>
+    <link rel="stylesheet" href="../shared.css" />
+    <script type="module" src="../../src/kite.js"></script>
+    <style>
+      .form-group { margin-bottom: 1.25rem; }
+      .form-label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem; color: var(--kite-text); }
+      .field-error { font-size: 0.8rem; color: var(--kite-danger); margin-top: 0.35rem; }
+      .field-valid { font-size: 0.8rem; color: var(--kite-success); margin-top: 0.35rem; }
+    </style>
+  </head>
+  <body>
+
+    <!-- Topbar Navigation -->
+    <div class="kite-topbar">
+      <a href="../index.html" class="kite-back-link">
+        <svg class="kite-icon" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+        <span>Gallery</span>
+      </a>
+      <span class="kite-chip">⚡ Basics</span>
+    </div>
+
+    <!-- Main Card Container -->
+    <div class="kite-card" kite-scope="{
+      email: '',
+      password: '',
+      submitted: false,
+      isValidEmail() { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email); },
+      isValidPassword() { return this.password.length >= 8; },
+      isValid() { return this.isValidEmail() && this.isValidPassword(); },
+      submit() {
+        if (!this.isValid()) return;
+        this.submitted = true;
+      }
+    }">
+      <h1 class="kite-title">🛡️ Reactive Form Validation</h1>
+      <p class="kite-desc">Live expression validation, dynamic error feedback, and disabled button binding without external plugins.</p>
+
+      <form kite-on-submit.prevent="submit()">
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input class="kite-input" type="email" placeholder="name@domain.com" kite-model="email" />
+          <div class="field-error" kite-if="email.length > 0 && !isValidEmail()">⚠️ Please enter a valid email address</div>
+          <div class="field-valid" kite-if="isValidEmail()">✅ Valid email address</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Password (minimum 8 characters)</label>
+          <input class="kite-input" type="password" placeholder="••••••••" kite-model="password" />
+          <div class="field-error" kite-if="password.length > 0 && !isValidPassword()">⚠️ Password must be at least 8 characters long</div>
+          <div class="field-valid" kite-if="isValidPassword()">✅ Secure password entered</div>
+        </div>
+
+        <button class="kite-btn kite-btn-primary" type="submit" kite-bind:disabled="!isValid()">🚀 Submit Form</button>
+
+        <div class="kite-badge" style="margin-top: 1rem; width: 100%; justify-content: center; background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3);" kite-if="submitted">
+          🎉 Registration submitted successfully!
+        </div>
+      </form>
+    </div>
+
+    <!-- Official Banner Footer -->
+    <footer class="kite-footer">
+      <a href="../index.html" title="Kite Examples Gallery">
+        <img src="../../assets/kite-banner.svg" alt="Kite Toolkit" class="kite-footer-banner">
+      </a>
+      <div class="kite-footer-meta">
+        HTML is enough for small things &bull; <a href="../index.html">← All Examples</a>
+      </div>
+    </footer>
+
+  </body>
+</html>

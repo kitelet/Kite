@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🏛️ Complete Reusable MVCR Mini-App — Kite Example</title>
+    <link rel="stylesheet" href="../shared.css" />
+    <script type="module" src="../../src/kite.js"></script>
+    <style>
+      .todo-form {
+        display: flex;
+        gap: 0.65rem;
+        margin-bottom: 1.5rem;
+      }
+      .todo-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .todo-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        background: rgba(11, 17, 32, 0.6);
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        border: 1px solid var(--kite-card-border);
+      }
+      .todo-item.done span {
+        text-decoration: line-through;
+        color: var(--kite-text-muted);
+      }
+      .todo-item span {
+        flex: 1;
+        font-size: 0.95rem;
+      }
+      .del-btn {
+        background: transparent;
+        border: none;
+        color: #ef4444;
+        font-size: 1.15rem;
+        cursor: pointer;
+        padding: 0 0.4rem;
+        line-height: 1;
+      }
+      .del-btn:hover {
+        color: #f87171;
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- Topbar Navigation -->
+    <div class="kite-topbar">
+      <a href="../index.html" class="kite-back-link">
+        <svg class="kite-icon" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+        <span>Gallery</span>
+      </a>
+      <span class="kite-chip">🏛️ Level 3 MVCR Bundle</span>
+    </div>
+
+    <!-- Layer 1, 2, 3: Reusable Component Definition -->
+    <kite-component name="task-manager">
+      <template>
+        <div class="task-manager">
+          <form class="todo-form" kite-on-submit.prevent="add()">
+            <input class="kite-input"
+                   kite-model="draft"
+                   placeholder="Enter a task title..."
+                   required>
+            <button class="kite-btn kite-btn-primary" type="submit">➕ Add</button>
+          </form>
+
+          <ul class="todo-list">
+            <li class="todo-item"
+                kite-class:done="item.done"
+                kite-for="(item, index) in items">
+              <input type="checkbox"
+                     kite-model="item.done"
+                     style="width: 1.1rem; height: 1.1rem; accent-color: #38bdf8;">
+              <span kite-text="item.title"></span>
+              <button class="del-btn"
+                      type="button"
+                      kite-on-click="remove(index)">✕</button>
+            </li>
+          </ul>
+
+          <div style="margin-top: 1.25rem; font-size: 0.85rem; color: var(--kite-text-muted); text-align: right;">
+            Total: <strong kite-text="items.length"></strong> items
+          </div>
+        </div>
+      </template>
+    </kite-component>
+
+    <!-- Layer 4a: Model Definition -->
+    <kite-model name="task-model">
+      {
+        items: [
+          { title: "Define Kite components", done: true },
+          { title: "Apply universal styling", done: true },
+          { title: "Test full-stack reusability", done: false }
+        ],
+        draft: "",
+        add() {
+          if (!this.draft || !this.draft.trim()) return;
+          this.items.push({ title: this.draft.trim(), done: false });
+          this.draft = "";
+        },
+        remove(index) {
+          this.items.splice(index, 1);
+        }
+      }
+    </kite-model>
+
+    <!-- Layer 4b: Controller Actions -->
+    <kite-controller model="task-model">
+      <kite-action name="add" run="add()"></kite-action>
+      <kite-action name="remove" run="remove(index)"></kite-action>
+    </kite-controller>
+
+    <!-- Layer 4c: View Composition -->
+    <kite-view name="task-view" model="task-model">
+      <div class="kite-card">
+        <h1 class="kite-title">🏛️ Task Board Mini-App</h1>
+        <p class="kite-desc">A self-contained 4-layer MVCR component carrying markup, state, controller actions, and routing.</p>
+        <kite-use name="task-manager"></kite-use>
+      </div>
+    </kite-view>
+
+    <!-- Layer 4d: Route & Outlet -->
+    <kite-route path="/" view="task-view"></kite-route>
+    <kite-outlet></kite-outlet>
+
+    <!-- Shared Footer Banner -->
+    <footer class="kite-footer">
+      <a href="../index.html" title="Kite Examples Gallery">
+        <img src="../../assets/kite-banner.svg" alt="Kite Toolkit" class="kite-footer-banner">
+      </a>
+      <div class="kite-footer-meta">
+        HTML is enough for small things &bull; <a href="../index.html">← All Examples</a>
+      </div>
+    </footer>
+
+  </body>
+</html>

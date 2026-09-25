@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🎨 Design System Plugin — Kite Example</title>
+    <link rel="stylesheet" href="../shared.css" />
+    <script type="module">
+      import { Kite } from '../../src/kite.js';
+
+      // Design system plugin: custom helpers and visual ripple directive
+      Kite.plugin('kite-design-system', (k) => {
+        k.helper('money', (amount) => {
+          return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount || 0);
+        });
+
+        k.directive('ripple', (el) => {
+          el.style.position = 'relative';
+          el.style.overflow = 'hidden';
+
+          const onClick = (e) => {
+            const rect = el.getBoundingClientRect();
+            const circle = document.createElement('span');
+            const d = Math.max(rect.width, rect.height);
+            circle.style.width = circle.style.height = `${d}px`;
+            circle.style.left = `${e.clientX - rect.left - d / 2}px`;
+            circle.style.top = `${e.clientY - rect.top - d / 2}px`;
+            circle.style.position = 'absolute';
+            circle.style.borderRadius = '50%';
+            circle.style.background = 'rgba(255, 255, 255, 0.3)';
+            circle.style.pointerEvents = 'none';
+            circle.style.transform = 'scale(0)';
+            circle.style.animation = 'kite-ripple 0.6s linear';
+
+            el.appendChild(circle);
+            setTimeout(() => circle.remove(), 600);
+          };
+
+          el.addEventListener('click', onClick);
+          return () => el.removeEventListener('click', onClick);
+        });
+      });
+
+      // Ensure plugin is installed
+      Kite.use('kite-design-system');
+    </script>
+    <style>
+      @keyframes kite-ripple {
+        to { transform: scale(4); opacity: 0; }
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- Topbar Navigation -->
+    <div class="kite-topbar">
+      <a href="../index.html" class="kite-back-link">
+        <svg class="kite-icon" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+        <span>Gallery</span>
+      </a>
+      <span class="kite-chip">🎨 Design System</span>
+    </div>
+
+    <!-- Main Card Container -->
+    <div class="kite-card" kite-scope="{
+      balance: 14250.75,
+      transactions: [
+        { label: 'Cloud Hosting Subscription', amount: 89.00 },
+        { label: 'Client Retainer Payment', amount: 4500.00 },
+        { label: 'Domain Renewal', amount: 15.50 }
+      ]
+    }">
+      <h1 class="kite-title">🎨 Plugin Design System</h1>
+      <p class="kite-desc">Custom formatting helpers (<code>money()</code>) and visual directives (<code>kite-ripple</code>) packaged cleanly as a Kite plugin.</p>
+
+      <div style="background: rgba(11, 17, 32, 0.6); padding: 1.25rem; border-radius: 10px; border: 1px solid var(--kite-card-border); margin-bottom: 1.25rem;">
+        <div style="font-size: 0.85rem; color: var(--kite-text-muted);">Current Liquid Balance</div>
+        <div style="font-size: 2.25rem; font-weight: 700; color: #4ade80;" kite-text="money(balance)">$0.00</div>
+      </div>
+
+      <div style="margin-bottom: 1rem; font-weight: 600; font-size: 0.95rem;">Recent Transactions</div>
+      <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem;">
+        <div style="display: flex; justify-content: space-between; padding: 0.65rem 0.85rem; background: rgba(11, 17, 32, 0.4); border-radius: 6px; font-size: 0.9rem;"
+             kite-for="t in transactions">
+          <span kite-text="t.label">Item</span>
+          <span style="font-weight: 600; color: var(--kite-primary);" kite-text="money(t.amount)">$0.00</span>
+        </div>
+      </div>
+
+      <button class="kite-btn kite-btn-primary" style="width: 100%;" kite-ripple kite-on-click="balance += 500">
+        💸 Deposit +$500.00 (Click for Ripple Effect)
+      </button>
+    </div>
+
+    <!-- Official Banner Footer -->
+    <footer class="kite-footer">
+      <a href="../index.html" title="Kite Examples Gallery">
+        <img src="../../assets/kite-banner.svg" alt="Kite Toolkit" class="kite-footer-banner">
+      </a>
+      <div class="kite-footer-meta">
+        HTML is enough for small things &bull; <a href="../index.html">← All Examples</a>
+      </div>
+    </footer>
+
+  </body>
+</html>

@@ -1,0 +1,12 @@
+<kite-component name="k-card" props="title">
+  <template>
+    <div class="card">
+      <div kite-if="title" class="card__header">
+        <h3 class="card__title" kite-text="title">Title</h3>
+      </div>
+      <div class="card__body">
+        <slot></slot>
+      </div>
+    </div>
+  </template>
+</kite-component>

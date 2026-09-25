@@ -1,0 +1,69 @@
+# Kite
+
+> HTML is enough for small things.
+
+Kite is a teaching toolkit for building small, self-contained interactive web apps using only HTML and CSS.
+
+## Not a framework
+
+Kite is not React, Vue, or Svelte. It is not for production-scale systems or large multi-team codebases. See https://getkite.netlify.app/docs/1-basics/limits.md for honest constraints (<500 interactive nodes, <20 models).
+
+## Quick start
+
+```html
+<script src="https://esm.sh/@kitelet/core"></script>
+
+<div kite-scope="{ count: 0 }">
+  <button kite-on-click="count++">+1</button>
+  <span kite-text="count"></span>
+</div>
+```
+
+## Core concepts
+
+- Directives: declarative `kite-*` attributes (`kite-scope`, `kite-text`, `kite-model`, `kite-for`, `kite-if`, `kite-on-*`)
+- Components: declarative `<kite-component>` templates instantiated via `<kite-use>` with slots and props
+- MVCR Architecture: `<kite-model>`, `<kite-view>`, `<kite-controller>`, `<kite-route>` directly in native HTML
+- API: `<kite-api>` client definitions with protocol adapters
+
+## Agentic Metadata
+
+- [AGENTS.md](AGENTS.md): Agent entry point and onboarding instructions
+- [.kite/capabilities.json](.kite/capabilities.json): Machine-readable signatures for every directive, tag, API, helper
+- [.kite/rules.json](.kite/rules.json): Machine-checkable constraints and severity definitions
+- [.kite/conventions.json](.kite/conventions.json): 9-slot markup order and file naming standards
+- [.kite/limits.json](.kite/limits.json): Scale constraints and graduation triggers
+
+## Documentation
+
+- [Getting started](docs/1-basics/getting-started.md): 5-minute hands-on quickstart
+- [Syntax Cheat Sheet](docs/1-basics/cheatsheet.md): 1-page complete syntax reference
+- [Directives](docs/1-basics/directives.md): Comprehensive attribute and modifier reference
+- [Forms & Binding](docs/1-basics/forms.md): Form controls, synchronization, and validation rules
+- [Styling & Cloaking](docs/1-basics/styling.md): `kite-cloak`, `display: contents`, Tailwind CSS compatibility
+- [Markup Convention](docs/1-basics/markup.md): Standard 9-category attribute ordering
+- [Limits & Sweet Spots](docs/1-basics/limits.md): Scale boundaries and constraints
+- [Declarative Components](docs/2-architecture/components.md): Components, slots, and props
+- [MVCR Architecture](docs/2-architecture/mvcr.md): Model, View, Controller, Route in HTML
+- [Declarative Routing](docs/2-architecture/routing.md): Client-side hash routing
+- [Reactivity Model](docs/2-architecture/scope.md): Proxies, dependency tracking, microtask batching
+- [Full-Stack Reusability](docs/2-architecture/reusable-components.md): 4-layer reusability and packaging
+- [JavaScript API Reference](docs/3-internals/api.md): Programmatic API for window.Kite
+- [Safe Expressions](docs/3-internals/expressions.md): Zero-eval parser and precedence
+- [Security & CSP](docs/3-internals/security.md): Strict CSP compliance without unsafe-eval
+- [Extending Kite](docs/3-internals/extending.md): Custom directives, helpers, rules, plugins
+- [CLI Reference](docs/3-internals/cli.md): Scaffolding, dev server, build commands
+- [Agentic Toolkit](docs/3-internals/agentic.md): Machine-readable metadata, schemas, and AI agent guides
+- [Testing Guide](docs/3-internals/testing.md): Unit tests and diagnostics
+- [Cookbook & Recipes](docs/4-guides/cookbook.md): Copy-pasteable UI patterns
+- [Full CRUD Guide](docs/4-guides/crud.md): In-memory and API-backed CRUD patterns, forms, and validation
+- [Backend Integrations](docs/4-guides/backend-integrations.md): Laravel, Django, Rails, Go, ASP.NET
+- [Kite + Laravel](docs/4-guides/laravel.md): Blade, Sanctum, CSRF, Livewire
+- [Graduating from Kite](docs/4-guides/graduating.md): Graduation triggers and migration paths
+- [Migration Guides](docs/4-guides/migrations.md): Migrating from Alpine, HTMX, React, Vue
+- [Stability & Versioning](docs/4-guides/stability.md): SemVer guarantees and frozen API contracts
+- [FAQ & Trade-offs](docs/4-guides/faq.md): Technical comparison and FAQ
+
+## Full text
+
+- [llms-full.txt](llms-full.txt): Complete concatenated documentation in plain text

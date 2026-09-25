@@ -1,0 +1,20 @@
+/* Theme tokens — override these to retheme */
+:root[data-theme="dark"], :root {
+  --color-primary:   #3b82f6;
+  --color-accent:    #8b5cf6;
+  --color-bg:        #0f172a;
+  --color-surface:   #1e293b;
+  --color-text:      #f8fafc;
+  --color-muted:     #94a3b8;
+  --color-border:    #334155;
+}
+
+:root[data-theme="light"] {
+  --color-primary:   #2563eb;
+  --color-accent:    #7c3aed;
+  --color-bg:        #f8fafc;
+  --color-surface:   #ffffff;
+  --color-text:      #0f172a;
+  --color-muted:     #64748b;
+  --color-border:    #e2e8f0;
+}

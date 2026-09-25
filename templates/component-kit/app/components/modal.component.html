@@ -1,0 +1,15 @@
+<kite-component name="k-modal" props="open,title">
+  <template>
+    <div class="modal-backdrop" kite-if="open" kite-on-click.self="$emit('close')">
+      <div class="modal">
+        <div class="modal__header">
+          <h3 class="modal__title" kite-text="title">Modal</h3>
+          <button class="modal__close" kite-on-click="$emit('close')" aria-label="Close">✕</button>
+        </div>
+        <div class="modal__body">
+          <slot></slot>
+        </div>
+      </div>
+    </div>
+  </template>
+</kite-component>

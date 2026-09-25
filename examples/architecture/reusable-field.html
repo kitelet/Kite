@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>📦 Reusable Input Field — Kite Example</title>
+    <link rel="stylesheet" href="../shared.css" />
+    <script type="module" src="../../src/kite.js"></script>
+    <style>
+      .demo-grid { display: grid; gap: 1.25rem; }
+      .field-wrapper { display: flex; flex-direction: column; gap: 0.35rem; }
+      .field-label { font-size: 0.85rem; font-weight: 600; color: var(--kite-text); display: flex; justify-content: space-between; }
+      .field-hint { font-size: 0.75rem; color: var(--kite-text-muted); }
+      .field-error { font-size: 0.75rem; color: var(--kite-danger); }
+      .field-input { width: 100%; box-sizing: border-box; background: var(--kite-input-bg); border: 1px solid var(--kite-card-border); color: var(--kite-text); padding: 0.65rem 0.85rem; border-radius: 8px; font-size: 0.95rem; }
+      .field-input:focus { outline: none; border-color: var(--kite-primary); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2); }
+      .field-input.has-error { border-color: var(--kite-danger); }
+    </style>
+  </head>
+  <body>
+
+    <!-- Topbar Navigation -->
+    <div class="kite-topbar">
+      <a href="../index.html" class="kite-back-link">
+        <svg class="kite-icon" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+        <span>Gallery</span>
+      </a>
+      <span class="kite-chip">📦 Level 1 Component</span>
+    </div>
+
+    <!-- Reusable Component Definition -->
+    <kite-component name="form-field">
+      <template>
+        <div class="field-wrapper">
+          <label class="field-label">
+            <span kite-text="label">Field</span>
+            <span class="field-hint" kite-if="hint" kite-text="hint"></span>
+          </label>
+          <input class="field-input"
+                 kite-bind:type="type || 'text'"
+                 kite-bind:placeholder="placeholder || ''"
+                 kite-class:has-error="error"
+                 kite-model="value" />
+          <span class="field-error" kite-if="error" kite-text="error"></span>
+        </div>
+      </template>
+    </kite-component>
+
+    <!-- Main Card Container -->
+    <div class="kite-card" kite-scope="{
+      username: '',
+      email: 'alex@example.com',
+      password: '',
+      submitted: false,
+      submit() { this.submitted = true; }
+    }">
+      <h1 class="kite-title">📦 Reusable Input Field</h1>
+      <p class="kite-desc">Encapsulated markup, label, validation state, and reactive input modeling in a single component.</p>
+
+      <form class="demo-grid" kite-on-submit.prevent="submit()">
+        <kite-use name="form-field"
+                  label="Username"
+                  placeholder="e.g. johndoe"
+                  hint="Public handle"
+                  kite-bind:value="username"></kite-use>
+
+        <kite-use name="form-field"
+                  label="Email Address"
+                  type="email"
+                  placeholder="you@domain.com"
+                  kite-bind:value="email"></kite-use>
+
+        <kite-use name="form-field"
+                  label="Master Password"
+                  type="password"
+                  placeholder="••••••••"
+                  hint="Min 8 characters"
+                  kite-bind:value="password"></kite-use>
+
+        <button class="kite-btn kite-btn-primary" type="submit" style="margin-top: 0.5rem;">💾 Save Profile</button>
+
+        <div class="kite-badge" style="background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); justify-content: center;" kite-if="submitted">
+          ✅ Form saved with Username: <strong kite-text="username" style="margin-left: 0.3rem;"></strong>
+        </div>
+      </form>
+    </div>
+
+    <!-- Official Banner Footer -->
+    <footer class="kite-footer">
+      <a href="../index.html" title="Kite Examples Gallery">
+        <img src="../../assets/kite-banner.svg" alt="Kite Toolkit" class="kite-footer-banner">
+      </a>
+      <div class="kite-footer-meta">
+        HTML is enough for small things &bull; <a href="../index.html">← All Examples</a>
+      </div>
+    </footer>
+
+  </body>
+</html>

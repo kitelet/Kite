@@ -1,0 +1,11 @@
+<kite-component name="k-button" props="label,variant,disabled">
+  <template>
+    <button
+      class="btn"
+      kite-bind:class="'btn--' + (variant || 'primary')"
+      kite-bind:disabled="disabled"
+      kite-on-click="$emit('click')">
+      <slot kite-text="label">Click</slot>
+    </button>
+  </template>
+</kite-component>

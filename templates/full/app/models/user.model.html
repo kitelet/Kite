@@ -1,0 +1,19 @@
+<kite-model name="user">
+  {
+    profile: {
+      name: "Alex Kite",
+      email: "alex@example.com",
+      bio: "Building HTML-first apps."
+    },
+    editing: false,
+    startEdit() {
+      this.editing = true;
+    },
+    cancelEdit() {
+      this.editing = false;
+    },
+    save() {
+      this.editing = false;
+    }
+  }
+</kite-model>

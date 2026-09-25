@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://getkite.netlify.app/schemas/limits-1.0.json",
+  "title": "Kite Limits Schema",
+  "type": "object",
+  "required": ["$schema", "comfortable", "possible", "notSupported", "graduationTriggers"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "comfortable": {
+      "type": "object",
+      "properties": {
+        "interactiveNodes": { "type": "integer" },
+        "models": { "type": "integer" },
+        "routes": { "type": "integer" },
+        "views": { "type": "integer" },
+        "components": { "type": "integer" },
+        "teamSize": { "type": "integer" }
+      }
+    },
+    "possible": {
+      "type": "object",
+      "properties": {
+        "interactiveNodes": { "type": "integer" },
+        "models": { "type": "integer" },
+        "routes": { "type": "integer" },
+        "views": { "type": "integer" },
+        "components": { "type": "integer" },
+        "teamSize": { "type": "integer" }
+      }
+    },
+    "notSupported": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "graduationTriggers": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

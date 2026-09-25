@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A full Kite MVCR application">
+  <title>Kite Full App</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/kite.css">
+  <link rel="stylesheet" href="/styles/theme.css">
+  <link rel="stylesheet" href="/styles/app.css">
+
+  <!-- Kite runtime -->
+  <script src="/kite.js" defer></script>
+</head>
+<body>
+
+  <!-- Config -->
+  <kite-config mode="dev" routing="hash" adapter="rest"></kite-config>
+
+  <!-- Navigation -->
+  <kite-include src="/app/components/nav-bar.component.html"></kite-include>
+  <kite-use name="nav-bar"></kite-use>
+
+  <!-- API client -->
+  <kite-include src="/app/api/client.api.html"></kite-include>
+
+  <!-- Models -->
+  <kite-include src="/app/models/todos.model.html"></kite-include>
+  <kite-include src="/app/models/user.model.html"></kite-include>
+
+  <!-- Controllers -->
+  <kite-include src="/app/controllers/todos.controller.html"></kite-include>
+  <kite-include src="/app/controllers/user.controller.html"></kite-include>
+
+  <!-- Components -->
+  <kite-include src="/app/components/todo-item.component.html"></kite-include>
+  <kite-include src="/app/components/user-card.component.html"></kite-include>
+
+  <!-- Views -->
+  <kite-include src="/app/views/home.view.html"></kite-include>
+  <kite-include src="/app/views/todos.view.html"></kite-include>
+  <kite-include src="/app/views/user.view.html"></kite-include>
+  <kite-include src="/app/views/about.view.html"></kite-include>
+
+  <!-- Routes -->
+  <kite-include src="/app/routes/routes.html"></kite-include>
+
+  <!-- Active View Outlet -->
+  <main class="container">
+    <kite-outlet></kite-outlet>
+  </main>
+
+</body>
+</html>
