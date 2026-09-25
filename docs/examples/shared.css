@@ -1,0 +1,340 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap");
+
+/**
+ * Shared Design System & Layout for all Kite Examples
+ * Unified aesthetic: modern typography, dark slate palette, refined micro-interactions, responsive card layouts.
+ */
+
+:root {
+  --kite-bg: #090d16;
+  --kite-card-bg: #141c2e;
+  --kite-card-border: rgba(255, 255, 255, 0.08);
+  --kite-primary: #38bdf8;
+  --kite-primary-hover: #7dd3fc;
+  --kite-primary-text: #090d16;
+  --kite-text: #f8fafc;
+  --kite-text-muted: #94a3b8;
+  --kite-input-bg: #070a10;
+  --kite-input-border: rgba(255, 255, 255, 0.08);
+  --kite-success: #22c55e;
+  --kite-danger: #ef4444;
+  --kite-radius: 14px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+body {
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--kite-bg);
+  color: var(--kite-text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 1.25rem 2.5rem 1.25rem;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+body:has(.doc-topbar) {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* ─── Global Topbar (Consistent with Docs & Landing) ─────────────────────── */
+.doc-topbar {
+  width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: 64px;
+  background-color: rgba(9, 13, 22, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--kite-card-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.75rem;
+  margin-bottom: 2rem;
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+.brand-section {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  cursor: pointer;
+  user-select: none;
+  text-decoration: none;
+}
+
+.brand-logo {
+  height: 30px;
+  width: auto;
+  max-width: 90px;
+  display: block;
+  object-fit: contain;
+  flex-shrink: 0;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.brand-section:hover .brand-logo {
+  transform: rotate(-4deg) scale(1.04);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: 2rem;
+}
+
+.nav-tab {
+  padding: 0.45rem 0.9rem;
+  border-radius: 6px;
+  color: var(--kite-text-muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.nav-tab:hover {
+  color: #f8fafc;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-tab.active {
+  color: var(--kite-primary);
+  background: rgba(56, 189, 248, 0.12);
+  font-weight: 600;
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid var(--kite-card-border);
+  color: var(--kite-text-muted);
+  text-decoration: none;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.btn-icon:hover {
+  color: var(--kite-text);
+  border-color: var(--kite-primary);
+  background: rgba(56, 189, 248, 0.08);
+}
+
+/* ─── Header & Navigation (Per-Example) ─────────────────────────────────── */
+.kite-topbar {
+  width: 100%;
+  max-width: 620px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.kite-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--kite-text-muted);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.35rem 0.75rem;
+  border-radius: 8px;
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid var(--kite-card-border);
+  transition: all 0.15s ease;
+}
+
+.kite-back-link:hover {
+  color: var(--kite-text);
+  background: rgba(51, 65, 85, 0.8);
+  border-color: var(--kite-primary);
+  transform: translateX(-2px);
+}
+
+.kite-icon {
+  width: 1rem;
+  height: 1rem;
+  display: inline-block;
+  vertical-align: middle;
+  stroke: currentColor;
+  stroke-width: 2.25;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.kite-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  background: rgba(56, 189, 248, 0.12);
+  color: var(--kite-primary);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* ─── Card Container ──────────────────────────────────────────────────────── */
+.kite-card {
+  width: 100%;
+  max-width: 620px;
+  background: var(--kite-card-bg);
+  border: 1px solid var(--kite-card-border);
+  border-radius: var(--kite-radius);
+  padding: 2rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+  margin-bottom: 2rem;
+}
+
+.kite-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.65rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+.kite-desc {
+  margin: 0 0 1.5rem 0;
+  font-size: 0.925rem;
+  color: var(--kite-text-muted);
+}
+
+/* ─── Standard Buttons ────────────────────────────────────────────────────── */
+.kite-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 1.25rem;
+  font-size: 0.925rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.kite-btn-primary {
+  background: var(--kite-primary);
+  color: var(--kite-primary-text);
+}
+
+.kite-btn-primary:hover {
+  background: var(--kite-primary-hover);
+  transform: translateY(-1px);
+}
+
+.kite-btn-primary:active {
+  transform: translateY(0);
+}
+
+.kite-btn-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--kite-text);
+  border: 1px solid var(--kite-card-border);
+}
+
+.kite-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.kite-btn-danger {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.kite-btn-danger:hover {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+/* ─── Standard Inputs ─────────────────────────────────────────────────────── */
+.kite-input {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  background: var(--kite-input-bg);
+  border: 1px solid var(--kite-input-border);
+  border-radius: 8px;
+  color: var(--kite-text);
+  font-size: 0.95rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.kite-input:focus {
+  outline: none;
+  border-color: var(--kite-primary);
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+}
+
+/* ─── Footer with Official Banner ─────────────────────────────────────────── */
+.kite-footer {
+  width: 100%;
+  max-width: 620px;
+  margin-top: auto;
+  padding-top: 1.5rem;
+  text-align: center;
+  border-top: 1px solid rgba(51, 65, 85, 0.5);
+}
+
+.kite-footer-banner {
+  max-width: 190px;
+  height: auto;
+  opacity: 0.9;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  display: block;
+  margin: 0 auto 0.75rem auto;
+}
+
+.kite-footer-banner:hover {
+  opacity: 1;
+  transform: scale(1.02);
+}
+
+.kite-footer-meta {
+  font-size: 0.8rem;
+  color: var(--kite-text-muted);
+}
+
+.kite-footer-meta a {
+  color: var(--kite-primary);
+  text-decoration: none;
+}
+
+.kite-footer-meta a:hover {
+  text-decoration: underline;
+}

@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🚀 Full App — Kite Example</title>
+    <link rel="stylesheet" href="../shared.css" />
+    <script type="module" src="../../src/kite.js"></script>
+  </head>
+  <body>
+
+    <!-- Topbar Navigation -->
+    <div class="kite-topbar">
+      <a href="../index.html" class="kite-back-link">
+        <svg class="kite-icon" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+        <span>Gallery</span>
+      </a>
+      <span class="kite-chip">⚡ Basics</span>
+    </div>
+
+    <!-- Main Card Container -->
+    <div class="kite-card" kite-scope="{
+      user: { name: 'Eldrex', role: 'Lead Developer', status: 'Online' },
+      tabs: ['Profile', 'Settings', 'Logs'],
+      activeTab: 'Profile',
+      logs: [
+        'Initialized Kite v1.0.0 core runtime',
+        'Scoped state proxy attached',
+        'Directives bound to DOM'
+      ],
+      newLog: '',
+      addLog() {
+        if (!this.newLog.trim()) return;
+        this.logs.unshift(this.newLog.trim());
+        this.newLog = '';
+      }
+    }">
+      <h1 class="kite-title">🚀 Complete Dashboard Mini-App</h1>
+      <p class="kite-desc">Multi-tab navigation, nested objects, conditional views, and event dispatch.</p>
+
+      <div style="display: flex; gap: 0.5rem; margin-bottom: 1.25rem; border-bottom: 1px solid var(--kite-card-border); padding-bottom: 0.5rem;">
+        <button class="kite-btn" style="padding: 0.4rem 0.85rem; font-size: 0.85rem;"
+                kite-for="t in tabs"
+                kite-class:kite-btn-primary="activeTab === t"
+                kite-class:kite-btn-secondary="activeTab !== t"
+                kite-on-click="activeTab = t"
+                kite-text="t">Tab</button>
+      </div>
+
+      <!-- Profile Tab -->
+      <div kite-if="activeTab === 'Profile'">
+        <div style="background: rgba(11, 17, 32, 0.5); padding: 1rem; border-radius: 8px; border: 1px solid var(--kite-card-border);">
+          <div style="font-size: 0.85rem; color: var(--kite-text-muted);">Name:</div>
+          <div style="font-weight: 600; font-size: 1.1rem; margin-bottom: 0.75rem;" kite-text="user.name">User</div>
+
+          <div style="font-size: 0.85rem; color: var(--kite-text-muted);">Role:</div>
+          <div style="font-weight: 600; font-size: 1.1rem; margin-bottom: 0.75rem;" kite-text="user.role">Role</div>
+
+          <div style="font-size: 0.85rem; color: var(--kite-text-muted);">Status:</div>
+          <span class="kite-badge" kite-text="user.status">Online</span>
+        </div>
+      </div>
+
+      <!-- Settings Tab -->
+      <div kite-if="activeTab === 'Settings'">
+        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <label style="font-size: 0.85rem; color: var(--kite-text-muted);">Update Name:</label>
+          <input class="kite-input" type="text" kite-model="user.name" />
+
+          <label style="font-size: 0.85rem; color: var(--kite-text-muted);">Update Role:</label>
+          <input class="kite-input" type="text" kite-model="user.role" />
+        </div>
+      </div>
+
+      <!-- Logs Tab -->
+      <div kite-if="activeTab === 'Logs'">
+        <form style="display: flex; gap: 0.5rem; margin-bottom: 1rem;" kite-on-submit.prevent="addLog()">
+          <input class="kite-input" type="text" placeholder="Add entry..." kite-model="newLog" required />
+          <button class="kite-btn kite-btn-primary" type="submit">➕ Log</button>
+        </form>
+        <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.4rem; max-height: 180px; overflow-y: auto;">
+          <li style="padding: 0.4rem 0.65rem; background: rgba(11, 17, 32, 0.4); border-radius: 6px; font-size: 0.85rem; font-family: monospace;"
+              kite-for="l in logs" kite-text="l"></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Official Banner Footer -->
+    <footer class="kite-footer">
+      <a href="../index.html" title="Kite Examples Gallery">
+        <img src="../../assets/kite-banner.svg" alt="Kite Toolkit" class="kite-footer-banner">
+      </a>
+      <div class="kite-footer-meta">
+        HTML is enough for small things &bull; <a href="../index.html">← All Examples</a>
+      </div>
+    </footer>
+
+  </body>
+</html>

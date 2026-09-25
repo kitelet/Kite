@@ -1,0 +1,14 @@
+<kite-view name="home">
+  <div class="card" kite-scope="counter">
+    <h2>Counter Demo</h2>
+    <p>This counter is driven by an MVCR model without user JavaScript.</p>
+    <div class="counter-box">
+      <button class="btn" kite-on-click="decrement()">−</button>
+      <span class="count-display" kite-text="count">0</span>
+      <button class="btn" kite-on-click="increment()">+</button>
+    </div>
+    <div class="actions">
+      <button class="btn btn-secondary" kite-on-click="reset()">Reset</button>
+    </div>
+  </div>
+</kite-view>

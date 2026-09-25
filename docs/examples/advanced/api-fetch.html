@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🌐 Remote API Data-Fetching — Kite Example</title>
+    <link rel="stylesheet" href="../shared.css" />
+    <script type="module" src="../../src/kite.js"></script>
+    <style>
+      .user-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.65rem;
+        margin-top: 1rem;
+      }
+      .user-card {
+        background: rgba(11, 17, 32, 0.5);
+        border: 1px solid var(--kite-card-border);
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+      }
+      .user-name {
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: var(--kite-text);
+      }
+      .user-email {
+        font-size: 0.8rem;
+        color: var(--kite-primary);
+      }
+      .user-company {
+        font-size: 0.75rem;
+        color: var(--kite-text-muted);
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- Topbar Navigation -->
+    <div class="kite-topbar">
+      <a href="../index.html" class="kite-back-link">
+        <svg class="kite-icon" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+        <span>Gallery</span>
+      </a>
+      <span class="kite-chip">🌐 APIs &amp; MVCR</span>
+    </div>
+
+    <!-- Declarative API Client -->
+    <kite-api name="usersApi" base="https://jsonplaceholder.typicode.com">
+      <kite-endpoint name="getUsers" path="/users" method="GET"></kite-endpoint>
+    </kite-api>
+
+    <!-- Reactive Model bound to API client -->
+    <kite-model name="usersModel" api="usersApi">
+      {
+        users: [],
+        loading: false,
+        error: null,
+        async fetchUsers() {
+          this.loading = true;
+          this.error = null;
+          try {
+            const res = await fetch('https://jsonplaceholder.typicode.com/users');
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const data = await res.json();
+            this.users = data.slice(0, 5);
+          } catch (err) {
+            this.error = err.message || 'Failed to load users';
+          } finally {
+            this.loading = false;
+          }
+        },
+        reset() {
+          this.users = [];
+          this.error = null;
+        }
+      }
+    </kite-model>
+
+    <!-- View bound to usersModel -->
+    <kite-view model="usersModel">
+      <div class="kite-card">
+        <h1 class="kite-title">🌐 Remote Users API</h1>
+        <p class="kite-desc">Declarative data-fetching with reactive loading and error states.</p>
+
+        <div class="kite-btn-group" style="margin-bottom: 1rem;">
+          <button class="kite-btn kite-btn-primary"
+                  type="button"
+                  kite-on-click="fetchUsers()"
+                  kite-bind:disabled="loading">
+            <span kite-if="loading">⏳ Fetching...</span>
+            <span kite-if="!loading">📥 Fetch Users</span>
+          </button>
+          <button class="kite-btn kite-btn-secondary"
+                  type="button"
+                  kite-on-click="reset()"
+                  kite-bind:disabled="loading || users.length === 0">
+            Clear
+          </button>
+        </div>
+
+        <!-- Loading State -->
+        <div class="kite-badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); width: 100%; justify-content: center;" kite-if="loading">
+          ⏳ Loading remote resources...
+        </div>
+
+        <!-- Error State -->
+        <div class="kite-badge" style="background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); width: 100%; justify-content: center;" kite-if="error">
+          ⚠️ <span kite-text="error"></span>
+        </div>
+
+        <!-- Empty State -->
+        <div class="kite-empty" kite-if="!loading && users.length === 0 && !error">
+          No users loaded yet. Click &ldquo;Fetch Users&rdquo; to load data from JSONPlaceholder.
+        </div>
+
+        <!-- Users List -->
+        <div class="user-grid" kite-if="!loading && users.length > 0">
+          <div class="user-card" kite-for="u in users">
+            <div class="user-name" kite-text="u.name"></div>
+            <div class="user-email" kite-text="u.email"></div>
+            <div class="user-company" kite-text="u.company ? u.company.name : ''"></div>
+          </div>
+        </div>
+      </div>
+    </kite-view>
+
+    <!-- Official Banner Footer -->
+    <footer class="kite-footer">
+      <a href="../index.html" title="Kite Examples Gallery">
+        <img src="../../assets/kite-banner.svg" alt="Kite Toolkit" class="kite-footer-banner">
+      </a>
+      <div class="kite-footer-meta">
+        HTML is enough for small things &bull; <a href="../index.html">← All Examples</a>
+      </div>
+    </footer>
+
+  </body>
+</html>

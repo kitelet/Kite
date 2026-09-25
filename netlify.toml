@@ -1,6 +1,5 @@
-# Netlify Configuration for Kite Documentation Portal (https://getkite.netlify.app)
-
 [build]
+  command = "node -e \"import('fs').then(fs => { fs.cpSync('examples', 'docs/examples', { recursive: true }); fs.cpSync('src', 'docs/src', { recursive: true }); })\""
   publish = "docs"
 
 # Production Security & Caching Headers
@@ -25,9 +24,3 @@
   for = "*.css"
   [headers.values]
     Cache-Control = "public, max-age=86400"
-
-# Single-Page Application Hash Fallback
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
